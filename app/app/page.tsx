@@ -98,6 +98,13 @@ export default function GeneratePage() {
         }),
       })
 
+      // Check content type before parsing
+      const contentType = response.headers.get('content-type')
+      if (!contentType?.includes('application/json')) {
+        setError('Server error. Please try again.')
+        return
+      }
+
       const data = await response.json()
 
       if (!response.ok || !data.success) {
