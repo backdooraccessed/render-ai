@@ -127,9 +127,14 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
     }
   } catch (error) {
     console.error('Replicate generation error:', error)
+    const errorMessage = error instanceof Error
+      ? error.message
+      : typeof error === 'object' && error !== null
+        ? JSON.stringify(error)
+        : 'Generation failed'
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Generation failed',
+      error: errorMessage,
     }
   }
 }
