@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import { ImageUpload } from '@/components/image-upload'
 import { PromptInput } from '@/components/prompt-input'
+import { StrengthSlider } from '@/components/strength-slider'
 import { GenerateButton } from '@/components/generate-button'
 import { GenerationResult } from '@/components/generation-result'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,10 +12,11 @@ import { fileToBase64, getSessionId } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { Info } from 'lucide-react'
 
-export default function Home() {
+export default function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [prompt, setPrompt] = useState('')
+  const [strength, setStrength] = useState(0.5)
   const [isLoading, setIsLoading] = useState(false)
   const [generation, setGeneration] = useState<Generation | null>(null)
   const [isMock, setIsMock] = useState(false)
@@ -53,6 +55,7 @@ export default function Home() {
         body: JSON.stringify({
           imageData,
           prompt: prompt.trim(),
+          strength,
           sessionId,
         }),
       })
@@ -72,7 +75,7 @@ export default function Home() {
     } finally {
       setIsLoading(false)
     }
-  }, [selectedFile, prompt])
+  }, [selectedFile, prompt, strength])
 
   const handleRegenerate = useCallback(() => {
     handleGenerate()
@@ -81,12 +84,12 @@ export default function Home() {
   const canGenerate = selectedFile && prompt.trim() && !isLoading
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight mb-2">
-            Interior AI Render
+            Generate Render
           </h1>
           <p className="text-muted-foreground">
             Transform your interior photos with natural language
@@ -121,10 +124,15 @@ export default function Home() {
                   Tell us what you want to change in natural language
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-6">
                 <PromptInput
                   value={prompt}
                   onChange={setPrompt}
+                  disabled={isLoading}
+                />
+                <StrengthSlider
+                  value={strength}
+                  onChange={setStrength}
                   disabled={isLoading}
                 />
               </CardContent>
@@ -162,7 +170,7 @@ export default function Home() {
                     <p className="font-medium text-foreground">Tips for best results:</p>
                     <ul className="list-disc list-inside space-y-1">
                       <li>Be specific about what you want to change</li>
-                      <li>The original room structure will be preserved</li>
+                      <li>Lower strength preserves more of the original</li>
                       <li>Works best with clear, well-lit photos</li>
                       <li>Try prompts like &quot;add plants&quot; or &quot;change to wooden floors&quot;</li>
                     </ul>

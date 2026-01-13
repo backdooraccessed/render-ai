@@ -7,7 +7,7 @@ export const maxDuration = 60 // Allow up to 60 seconds for generation
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { imageData, prompt, sessionId } = body
+    const { imageData, prompt, strength = 0.5, sessionId } = body
 
     // Validate required fields
     if (!imageData) {
@@ -77,6 +77,7 @@ export async function POST(request: NextRequest) {
     const result = await generateInteriorRender({
       imageUrl: inputImageUrl,
       userPrompt: prompt.trim(),
+      strength: Math.max(0.2, Math.min(0.8, strength)), // Clamp between 0.2-0.8
     })
 
     if (!result.success) {

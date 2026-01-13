@@ -8,6 +8,7 @@ const replicate = process.env.REPLICATE_API_TOKEN
 interface GenerationParams {
   imageUrl: string
   userPrompt: string
+  strength?: number
 }
 
 interface GenerationResult {
@@ -19,7 +20,7 @@ interface GenerationResult {
 }
 
 export async function generateInteriorRender(params: GenerationParams): Promise<GenerationResult> {
-  const { imageUrl, userPrompt } = params
+  const { imageUrl, userPrompt, strength = 0.5 } = params
 
   // Check if Replicate is configured
   if (!replicate) {
@@ -46,7 +47,7 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
           negative_prompt: negativePrompt,
           num_inference_steps: 30,
           guidance_scale: 7.5,
-          prompt_strength: 0.5, // Lower value = preserve more of original image
+          prompt_strength: strength, // User-controlled: lower = preserve more original
           scheduler: 'K_EULER',
         },
       }
