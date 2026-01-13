@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { generateInteriorRender, isReplicateConfigured } from '@/lib/replicate'
+import { checkGenerationLimit, incrementGenerationCount } from '@/lib/auth'
 
 export const maxDuration = 60 // Allow up to 60 seconds for generation
 
@@ -34,6 +35,31 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createClient()
+
+    // Get authenticated user
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'Please sign in to generate images' },
+        { status: 401 }
+      )
+    }
+
+    // Check generation limit
+    const { allowed, remaining, isPro } = await checkGenerationLimit(user.id)
+
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Daily limit reached. Upgrade to Pro for unlimited generations.',
+          limitReached: true,
+          remaining: 0,
+        },
+        { status: 429 }
+      )
+    }
 
     // Upload input image to Supabase Storage
     const imageBuffer = Buffer.from(imageData.split(',')[1], 'base64')
@@ -86,6 +112,7 @@ export async function POST(request: NextRequest) {
     const { data: generation, error: insertError } = await supabase
       .from('generations')
       .insert({
+        user_id: user.id,
         session_id: sessionId || null,
         input_image_url: inputImageUrl,
         style: 'custom', // Mark as custom prompt
@@ -181,6 +208,11 @@ export async function POST(request: NextRequest) {
       console.error('Update error:', updateError)
     }
 
+    // Increment generation count for free users
+    if (!isPro) {
+      await incrementGenerationCount(user.id)
+    }
+
     // Add output_image_urls to response (not stored in DB, but returned to client)
     const generationWithUrls = {
       ...(updatedGeneration || generation),
@@ -191,10 +223,17 @@ export async function POST(request: NextRequest) {
       strength,
     }
 
+    // Calculate new remaining count
+    const newRemaining = isPro ? Infinity : remaining - 1
+
     return NextResponse.json({
       success: true,
       generation: generationWithUrls,
       isMock: result.isMock,
+      credits: {
+        remaining: newRemaining,
+        isPro,
+      },
     })
   } catch (error) {
     console.error('Generation error:', error)
