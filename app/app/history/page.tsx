@@ -7,6 +7,7 @@ import { getSessionId } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { RefreshCw, Heart } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { PDFExportButton } from '@/components/pdf-export-button'
 
 type FilterMode = 'all' | 'favorites'
 
@@ -70,15 +71,24 @@ export default function HistoryPage() {
               View and download your past renders
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchGenerations}
-            disabled={isLoading}
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
+          <div className="flex gap-2">
+            <PDFExportButton
+              images={generations
+                .filter(g => g.output_image_url)
+                .map(g => g.output_image_url!)}
+              title="RenderAI History"
+              disabled={isLoading || generations.length === 0}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchGenerations}
+              disabled={isLoading}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
         </div>
 
         {error && (

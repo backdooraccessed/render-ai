@@ -31,6 +31,15 @@ export function Header() {
                 Generate
               </Link>
               <Link
+                href="/app/batch"
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  pathname === '/app/batch' ? 'text-primary' : 'text-muted-foreground'
+                )}
+              >
+                Batch
+              </Link>
+              <Link
                 href="/app/history"
                 className={cn(
                   "text-sm font-medium transition-colors hover:text-primary",

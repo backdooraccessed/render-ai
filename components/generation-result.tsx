@@ -10,7 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Download, RefreshCw, AlertCircle, Share2, Check, Eye, EyeOff, ChevronDown, Heart } from 'lucide-react'
+import { Download, RefreshCw, AlertCircle, Share2, Check, Eye, EyeOff, ChevronDown, Heart, Share } from 'lucide-react'
+import { SocialExportButton } from '@/components/social-export-button'
 import { cn } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { toast } from 'sonner'
@@ -401,6 +402,8 @@ export function GenerationResult({
         >
           <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
         </Button>
+
+        <SocialExportButton imageUrl={currentOutputUrl || ''} disabled={!currentOutputUrl} />
 
         {onRegenerate && (
           <Button onClick={onRegenerate} variant="outline" size="icon">
