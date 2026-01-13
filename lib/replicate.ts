@@ -1,5 +1,5 @@
 import Replicate from 'replicate'
-import { buildPrompt } from './prompts'
+import { buildNaturalPrompt } from './prompts'
 
 const replicate = process.env.REPLICATE_API_TOKEN
   ? new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
@@ -7,8 +7,7 @@ const replicate = process.env.REPLICATE_API_TOKEN
 
 interface GenerationParams {
   imageUrl: string
-  style: string
-  roomType: string
+  userPrompt: string
 }
 
 interface GenerationResult {
@@ -20,7 +19,7 @@ interface GenerationResult {
 }
 
 export async function generateInteriorRender(params: GenerationParams): Promise<GenerationResult> {
-  const { imageUrl, style, roomType } = params
+  const { imageUrl, userPrompt } = params
 
   // Check if Replicate is configured
   if (!replicate) {
@@ -34,9 +33,10 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
   }
 
   try {
-    const { prompt, negativePrompt } = buildPrompt(style, roomType)
+    const { prompt, negativePrompt } = buildNaturalPrompt(userPrompt)
 
     // Using SDXL img2img for interior rendering
+    // Lower prompt_strength (0.5) preserves more of the original image structure
     const output = await replicate.run(
       'stability-ai/sdxl:7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc',
       {
@@ -46,7 +46,7 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
           negative_prompt: negativePrompt,
           num_inference_steps: 30,
           guidance_scale: 7.5,
-          prompt_strength: 0.8,
+          prompt_strength: 0.5, // Lower value = preserve more of original image
           scheduler: 'K_EULER',
         },
       }

@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { generateInteriorRender, isReplicateConfigured } from '@/lib/replicate'
-import { STYLES, ROOM_TYPES } from '@/lib/prompts'
 
 export const maxDuration = 60 // Allow up to 60 seconds for generation
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { imageData, style, roomType, sessionId } = body
+    const { imageData, prompt, sessionId } = body
 
     // Validate required fields
     if (!imageData) {
@@ -18,16 +17,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!style || !STYLES.find(s => s.id === style)) {
+    if (!prompt || prompt.trim().length === 0) {
       return NextResponse.json(
-        { success: false, error: 'Invalid style' },
-        { status: 400 }
-      )
-    }
-
-    if (!roomType || !ROOM_TYPES.find(r => r.id === roomType)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid room type' },
+        { success: false, error: 'Please describe what changes you want' },
         { status: 400 }
       )
     }
@@ -66,8 +58,8 @@ export async function POST(request: NextRequest) {
       .insert({
         session_id: sessionId || null,
         input_image_url: inputImageUrl,
-        style,
-        room_type: roomType,
+        style: 'custom', // Mark as custom prompt
+        room_type: 'custom',
         status: 'processing',
       })
       .select()
@@ -84,8 +76,7 @@ export async function POST(request: NextRequest) {
     // Generate the interior render
     const result = await generateInteriorRender({
       imageUrl: inputImageUrl,
-      style,
-      roomType,
+      userPrompt: prompt.trim(),
     })
 
     if (!result.success) {

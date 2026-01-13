@@ -2,8 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { ImageUpload } from '@/components/image-upload'
-import { StyleSelector } from '@/components/style-selector'
-import { RoomSelector } from '@/components/room-selector'
+import { PromptInput } from '@/components/prompt-input'
 import { GenerateButton } from '@/components/generate-button'
 import { GenerationResult } from '@/components/generation-result'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,8 +14,7 @@ import { Info } from 'lucide-react'
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [style, setStyle] = useState('modern')
-  const [roomType, setRoomType] = useState('living_room')
+  const [prompt, setPrompt] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [generation, setGeneration] = useState<Generation | null>(null)
   const [isMock, setIsMock] = useState(false)
@@ -37,7 +35,7 @@ export default function Home() {
   }, [])
 
   const handleGenerate = useCallback(async () => {
-    if (!selectedFile) return
+    if (!selectedFile || !prompt.trim()) return
 
     setIsLoading(true)
     setError(null)
@@ -54,8 +52,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           imageData,
-          style,
-          roomType,
+          prompt: prompt.trim(),
           sessionId,
         }),
       })
@@ -75,13 +72,13 @@ export default function Home() {
     } finally {
       setIsLoading(false)
     }
-  }, [selectedFile, style, roomType])
+  }, [selectedFile, prompt])
 
   const handleRegenerate = useCallback(() => {
     handleGenerate()
   }, [handleGenerate])
 
-  const canGenerate = selectedFile && !isLoading
+  const canGenerate = selectedFile && prompt.trim() && !isLoading
 
   return (
     <div className="min-h-screen bg-background">
@@ -92,7 +89,7 @@ export default function Home() {
             Interior AI Render
           </h1>
           <p className="text-muted-foreground">
-            Transform your interior photos into photorealistic renders
+            Transform your interior photos with natural language
           </p>
         </div>
 
@@ -119,20 +116,15 @@ export default function Home() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Style Options</CardTitle>
+                <CardTitle>Describe Changes</CardTitle>
                 <CardDescription>
-                  Choose your interior design style and room type
+                  Tell us what you want to change in natural language
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <StyleSelector
-                  value={style}
-                  onChange={setStyle}
-                  disabled={isLoading}
-                />
-                <RoomSelector
-                  value={roomType}
-                  onChange={setRoomType}
+              <CardContent>
+                <PromptInput
+                  value={prompt}
+                  onChange={setPrompt}
                   disabled={isLoading}
                 />
               </CardContent>
@@ -169,10 +161,10 @@ export default function Home() {
                   <div className="text-sm text-muted-foreground space-y-2">
                     <p className="font-medium text-foreground">Tips for best results:</p>
                     <ul className="list-disc list-inside space-y-1">
-                      <li>Use well-lit photos with clear room structure</li>
-                      <li>Works best with empty or minimally furnished rooms</li>
-                      <li>3D screenshots and sketches with clear lines work great</li>
-                      <li>Avoid fisheye or heavily distorted images</li>
+                      <li>Be specific about what you want to change</li>
+                      <li>The original room structure will be preserved</li>
+                      <li>Works best with clear, well-lit photos</li>
+                      <li>Try prompts like &quot;add plants&quot; or &quot;change to wooden floors&quot;</li>
                     </ul>
                   </div>
                 </div>
