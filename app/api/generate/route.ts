@@ -7,7 +7,15 @@ export const maxDuration = 60 // Allow up to 60 seconds for generation
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { imageData, prompt, strength = 0.5, sessionId } = body
+    const {
+      imageData,
+      prompt,
+      strength = 0.5,
+      sessionId,
+      numOutputs = 1,
+      negativePrompt,
+      seed,
+    } = body
 
     // Validate required fields
     if (!imageData) {
@@ -73,11 +81,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Generate the interior render
+    // Generate the interior render(s)
     const result = await generateInteriorRender({
       imageUrl: inputImageUrl,
       userPrompt: prompt.trim(),
       strength: Math.max(0.2, Math.min(0.8, strength)), // Clamp between 0.2-0.8
+      numOutputs: Math.max(1, Math.min(4, numOutputs)), // Clamp between 1-4
+      negativePrompt: negativePrompt?.trim() || undefined,
+      seed: seed !== undefined ? seed : undefined,
     })
 
     if (!result.success) {
@@ -96,40 +107,45 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // If we have an output URL, upload it to Supabase Storage (for non-mock results)
-    let outputImageUrl = result.outputUrl
+    // Upload output images to Supabase Storage (for non-mock results)
+    let outputImageUrls: string[] = result.outputUrls || []
 
-    if (result.outputUrl && !result.isMock) {
-      try {
-        const outputResponse = await fetch(result.outputUrl)
-        const outputBlob = await outputResponse.blob()
-        const outputBuffer = Buffer.from(await outputBlob.arrayBuffer())
-        const outputFileName = `output-${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`
+    if (result.outputUrls && result.outputUrls.length > 0 && !result.isMock) {
+      outputImageUrls = await Promise.all(
+        result.outputUrls.map(async (outputUrl, index) => {
+          try {
+            const outputResponse = await fetch(outputUrl)
+            const outputBlob = await outputResponse.blob()
+            const outputBuffer = Buffer.from(await outputBlob.arrayBuffer())
+            const outputFileName = `output-${Date.now()}-${index}-${Math.random().toString(36).substring(7)}.jpg`
 
-        const { error: outputUploadError } = await supabase.storage
-          .from('renders')
-          .upload(outputFileName, outputBuffer, {
-            contentType: 'image/jpeg',
-            upsert: false,
-          })
+            const { error: outputUploadError } = await supabase.storage
+              .from('renders')
+              .upload(outputFileName, outputBuffer, {
+                contentType: 'image/jpeg',
+                upsert: false,
+              })
 
-        if (!outputUploadError) {
-          const { data: outputPublicUrl } = supabase.storage
-            .from('renders')
-            .getPublicUrl(outputFileName)
-          outputImageUrl = outputPublicUrl.publicUrl
-        }
-      } catch (e) {
-        console.error('Failed to upload output image:', e)
-        // Continue with original URL if upload fails
-      }
+            if (!outputUploadError) {
+              const { data: outputPublicUrl } = supabase.storage
+                .from('renders')
+                .getPublicUrl(outputFileName)
+              return outputPublicUrl.publicUrl
+            }
+            return outputUrl // Fallback to original URL
+          } catch (e) {
+            console.error('Failed to upload output image:', e)
+            return outputUrl // Continue with original URL if upload fails
+          }
+        })
+      )
     }
 
-    // Update generation with output
+    // Update generation with outputs
     const { data: updatedGeneration, error: updateError } = await supabase
       .from('generations')
       .update({
-        output_image_url: outputImageUrl,
+        output_image_url: outputImageUrls[0] || null, // Primary output for backward compatibility
         replicate_prediction_id: result.predictionId,
         status: 'completed',
         completed_at: new Date().toISOString(),
@@ -142,9 +158,19 @@ export async function POST(request: NextRequest) {
       console.error('Update error:', updateError)
     }
 
+    // Add output_image_urls to response (not stored in DB, but returned to client)
+    const generationWithUrls = {
+      ...(updatedGeneration || generation),
+      output_image_urls: outputImageUrls,
+      prompt: prompt.trim(),
+      negative_prompt: negativePrompt?.trim() || null,
+      seed: seed ?? null,
+      strength,
+    }
+
     return NextResponse.json({
       success: true,
-      generation: updatedGeneration || generation,
+      generation: generationWithUrls,
       isMock: result.isMock,
     })
   } catch (error) {

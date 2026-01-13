@@ -3,7 +3,12 @@
 import { useState, useCallback } from 'react'
 import { ImageUpload } from '@/components/image-upload'
 import { PromptInput } from '@/components/prompt-input'
+import { StylePresets } from '@/components/style-presets'
 import { StrengthSlider } from '@/components/strength-slider'
+import { OutputCountSelector } from '@/components/output-count-selector'
+import { NegativePromptInput } from '@/components/negative-prompt-input'
+import { PromptHistory } from '@/components/prompt-history'
+import { SeedControl } from '@/components/seed-control'
 import { GenerateButton } from '@/components/generate-button'
 import { GenerationResult } from '@/components/generation-result'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,7 +21,11 @@ export default function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [prompt, setPrompt] = useState('')
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
   const [strength, setStrength] = useState(0.5)
+  const [numOutputs, setNumOutputs] = useState(1)
+  const [negativePrompt, setNegativePrompt] = useState('')
+  const [seed, setSeed] = useState<number | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(false)
   const [generation, setGeneration] = useState<Generation | null>(null)
   const [isMock, setIsMock] = useState(false)
@@ -34,6 +43,11 @@ export default function GeneratePage() {
     setPreviewUrl(null)
     setGeneration(null)
     setError(null)
+  }, [])
+
+  const handleStyleSelect = useCallback((styleName: string, stylePrompt: string) => {
+    setSelectedStyle(styleName)
+    setPrompt(stylePrompt)
   }, [])
 
   const handleGenerate = useCallback(async () => {
@@ -56,6 +70,9 @@ export default function GeneratePage() {
           imageData,
           prompt: prompt.trim(),
           strength,
+          numOutputs,
+          negativePrompt: negativePrompt.trim() || undefined,
+          seed,
           sessionId,
         }),
       })
@@ -75,7 +92,7 @@ export default function GeneratePage() {
     } finally {
       setIsLoading(false)
     }
-  }, [selectedFile, prompt, strength])
+  }, [selectedFile, prompt, strength, numOutputs])
 
   const handleRegenerate = useCallback(() => {
     handleGenerate()
@@ -121,18 +138,47 @@ export default function GeneratePage() {
               <CardHeader>
                 <CardTitle>Describe Changes</CardTitle>
                 <CardDescription>
-                  Tell us what you want to change in natural language
+                  Choose a style preset or describe changes in natural language
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                <StylePresets
+                  selectedStyle={selectedStyle}
+                  onStyleSelect={handleStyleSelect}
+                  disabled={isLoading}
+                />
                 <PromptInput
                   value={prompt}
-                  onChange={setPrompt}
+                  onChange={(value) => {
+                    setPrompt(value)
+                    // Clear selected style when user manually edits
+                    if (selectedStyle) setSelectedStyle(null)
+                  }}
+                  disabled={isLoading}
+                />
+                <NegativePromptInput
+                  value={negativePrompt}
+                  onChange={setNegativePrompt}
+                  disabled={isLoading}
+                />
+                <PromptHistory
+                  currentPrompt={prompt}
+                  onSelectPrompt={setPrompt}
                   disabled={isLoading}
                 />
                 <StrengthSlider
                   value={strength}
                   onChange={setStrength}
+                  disabled={isLoading}
+                />
+                <OutputCountSelector
+                  value={numOutputs}
+                  onChange={setNumOutputs}
+                  disabled={isLoading}
+                />
+                <SeedControl
+                  value={seed}
+                  onChange={setSeed}
                   disabled={isLoading}
                 />
               </CardContent>

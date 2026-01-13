@@ -9,56 +9,81 @@ interface GenerationParams {
   imageUrl: string
   userPrompt: string
   strength?: number
+  numOutputs?: number
+  negativePrompt?: string
+  seed?: number
 }
 
 interface GenerationResult {
   success: boolean
-  outputUrl?: string
+  outputUrls?: string[]
   predictionId?: string
   error?: string
   isMock?: boolean
 }
 
 export async function generateInteriorRender(params: GenerationParams): Promise<GenerationResult> {
-  const { imageUrl, userPrompt, strength = 0.5 } = params
+  const {
+    imageUrl,
+    userPrompt,
+    strength = 0.5,
+    numOutputs = 1,
+    negativePrompt: customNegativePrompt,
+    seed,
+  } = params
 
   // Check if Replicate is configured
   if (!replicate) {
     console.log('Replicate API not configured, returning mock result')
+    // Return mock outputs based on numOutputs
+    const mockOutputs = Array.from({ length: numOutputs }, () => imageUrl)
     return {
       success: true,
-      outputUrl: imageUrl, // Return input image as mock output
+      outputUrls: mockOutputs,
       predictionId: 'mock-' + Date.now(),
       isMock: true,
     }
   }
 
   try {
-    const { prompt, negativePrompt } = buildNaturalPrompt(userPrompt)
+    const { prompt, negativePrompt: defaultNegativePrompt } = buildNaturalPrompt(userPrompt)
+
+    // Combine custom negative prompt with defaults
+    const negativePrompt = customNegativePrompt
+      ? `${customNegativePrompt}, ${defaultNegativePrompt}`
+      : defaultNegativePrompt
+
+    // Build input params
+    const inputParams: Record<string, unknown> = {
+      image: imageUrl,
+      prompt: prompt,
+      negative_prompt: negativePrompt,
+      num_inference_steps: 30,
+      guidance_scale: 7.5,
+      prompt_strength: strength,
+      scheduler: 'K_EULER',
+      num_outputs: numOutputs,
+    }
+
+    // Add seed if provided (for reproducibility)
+    if (seed !== undefined) {
+      inputParams.seed = seed
+    }
 
     // Using SDXL img2img for interior rendering
-    // Lower prompt_strength (0.5) preserves more of the original image structure
     const output = await replicate.run(
       'stability-ai/sdxl:7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc',
       {
-        input: {
-          image: imageUrl,
-          prompt: prompt,
-          negative_prompt: negativePrompt,
-          num_inference_steps: 30,
-          guidance_scale: 7.5,
-          prompt_strength: strength, // User-controlled: lower = preserve more original
-          scheduler: 'K_EULER',
-        },
+        input: inputParams,
       }
     )
 
     // Output is an array of URLs
-    const outputUrl = Array.isArray(output) ? output[0] : output
+    const outputUrls = Array.isArray(output) ? (output as unknown as string[]) : [output as unknown as string]
 
     return {
       success: true,
-      outputUrl: outputUrl as string,
+      outputUrls,
       predictionId: 'replicate-' + Date.now(),
     }
   } catch (error) {

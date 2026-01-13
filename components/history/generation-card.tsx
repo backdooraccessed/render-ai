@@ -3,16 +3,21 @@
 import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Download, Trash2, Maximize2 } from 'lucide-react'
+import { Download, Trash2, Maximize2, Heart } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import type { Generation } from '@/types'
+import { toast } from 'sonner'
 
 interface GenerationCardProps {
   generation: Generation
   onDelete?: (id: string) => void
+  onFavoriteToggle?: (id: string, isFavorite: boolean) => void
 }
 
-export function GenerationCard({ generation, onDelete }: GenerationCardProps) {
+export function GenerationCard({ generation, onDelete, onFavoriteToggle }: GenerationCardProps) {
   const [showFull, setShowFull] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(generation.is_favorite ?? false)
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false)
 
   const handleDownload = async () => {
     if (!generation.output_image_url) return
@@ -30,6 +35,34 @@ export function GenerationCard({ generation, onDelete }: GenerationCardProps) {
       document.body.removeChild(a)
     } catch (error) {
       console.error('Download failed:', error)
+    }
+  }
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (isTogglingFavorite) return
+
+    setIsTogglingFavorite(true)
+    try {
+      const response = await fetch(`/api/generations/${generation.id}/favorite`, {
+        method: 'POST',
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setIsFavorite(data.is_favorite)
+        if (onFavoriteToggle) {
+          onFavoriteToggle(generation.id, data.is_favorite)
+        }
+        toast.success(data.is_favorite ? 'Added to favorites' : 'Removed from favorites')
+      } else {
+        toast.error('Failed to update favorite')
+      }
+    } catch (error) {
+      console.error('Favorite toggle failed:', error)
+      toast.error('Failed to update favorite')
+    } finally {
+      setIsTogglingFavorite(false)
     }
   }
 
@@ -60,6 +93,13 @@ export function GenerationCard({ generation, onDelete }: GenerationCardProps) {
             </div>
           )}
 
+          {/* Favorite badge */}
+          {isFavorite && (
+            <div className="absolute top-2 left-2 bg-red-500 text-white p-1.5 rounded-full">
+              <Heart className="h-3 w-3 fill-current" />
+            </div>
+          )}
+
           {/* Overlay with actions */}
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
             <Button
@@ -69,6 +109,15 @@ export function GenerationCard({ generation, onDelete }: GenerationCardProps) {
               className="h-9 w-9"
             >
               <Maximize2 className="h-4 w-4" />
+            </Button>
+            <Button
+              size="icon"
+              variant="secondary"
+              onClick={handleToggleFavorite}
+              disabled={isTogglingFavorite}
+              className={cn("h-9 w-9", isFavorite && "text-red-500")}
+            >
+              <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
             </Button>
             {generation.output_image_url && (
               <Button

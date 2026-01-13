@@ -5,6 +5,7 @@ export interface Generation {
   session_id: string | null
   input_image_url: string
   output_image_url: string | null
+  output_image_urls?: string[] // Multiple outputs support
   style: string
   room_type: string
   status: GenerationStatus
@@ -12,6 +13,11 @@ export interface Generation {
   error_message: string | null
   created_at: string
   completed_at: string | null
+  is_favorite?: boolean
+  prompt?: string
+  negative_prompt?: string
+  seed?: number
+  strength?: number
 }
 
 export interface Style {

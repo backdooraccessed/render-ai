@@ -5,12 +5,16 @@ import { GenerationGrid } from '@/components/history/generation-grid'
 import { Button } from '@/components/ui/button'
 import { getSessionId } from '@/lib/utils'
 import type { Generation } from '@/types'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, Heart } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+type FilterMode = 'all' | 'favorites'
 
 export default function HistoryPage() {
   const [generations, setGenerations] = useState<Generation[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [filterMode, setFilterMode] = useState<FilterMode>('all')
 
   const fetchGenerations = useCallback(async () => {
     setIsLoading(true)
@@ -83,8 +87,30 @@ export default function HistoryPage() {
           </div>
         )}
 
+        {/* Filter tabs */}
+        <div className="flex gap-2 mb-6">
+          <Button
+            variant={filterMode === 'all' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterMode('all')}
+          >
+            All ({generations.length})
+          </Button>
+          <Button
+            variant={filterMode === 'favorites' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilterMode('favorites')}
+            className={cn(filterMode === 'favorites' && "bg-red-500 hover:bg-red-600")}
+          >
+            <Heart className="h-4 w-4 mr-1" />
+            Favorites ({generations.filter(g => g.is_favorite).length})
+          </Button>
+        </div>
+
         <GenerationGrid
-          generations={generations}
+          generations={filterMode === 'favorites'
+            ? generations.filter(g => g.is_favorite)
+            : generations}
           isLoading={isLoading}
           onDelete={handleDelete}
         />
