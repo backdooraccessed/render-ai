@@ -77,7 +77,7 @@ export function GenerationCard({ generation, onDelete, onFavoriteToggle }: Gener
 
   return (
     <>
-      <Card className="overflow-hidden group">
+      <Card className="overflow-hidden group card-hover cursor-pointer">
         <div className="relative aspect-[4/3]">
           {generation.output_image_url ? (
             <img
@@ -117,7 +117,10 @@ export function GenerationCard({ generation, onDelete, onFavoriteToggle }: Gener
               disabled={isTogglingFavorite}
               className={cn("h-9 w-9", isFavorite && "text-red-500")}
             >
-              <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
+              <Heart className={cn(
+                "h-4 w-4 transition-transform",
+                isFavorite && "fill-current animate-heart-pop"
+              )} />
             </Button>
             {generation.output_image_url && (
               <Button
