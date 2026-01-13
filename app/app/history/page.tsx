@@ -123,6 +123,7 @@ export default function HistoryPage() {
             : generations}
           isLoading={isLoading}
           onDelete={handleDelete}
+          emptyVariant={filterMode === 'favorites' ? 'favorites' : 'history'}
         />
       </div>
     </div>

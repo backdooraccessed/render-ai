@@ -1,7 +1,9 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { GalleryCard } from './gallery-card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/empty-state'
 
 interface Generation {
   id: string
@@ -20,6 +22,8 @@ interface GalleryGridProps {
 }
 
 export function GalleryGrid({ generations, isLoading }: GalleryGridProps) {
+  const router = useRouter()
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -32,17 +36,15 @@ export function GalleryGrid({ generations, isLoading }: GalleryGridProps) {
 
   if (generations.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">No renders found</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          Try adjusting your filters or check back later
-        </p>
-      </div>
+      <EmptyState
+        variant="gallery"
+        onAction={() => router.push('/app')}
+      />
     )
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 stagger-children">
       {generations.map((generation) => (
         <GalleryCard
           key={generation.id}

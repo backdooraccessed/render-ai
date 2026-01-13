@@ -14,6 +14,9 @@ import { GenerateButton } from '@/components/generate-button'
 import { GenerationResult } from '@/components/generation-result'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { OnboardingTour } from '@/components/onboarding-tour'
+import { FirstGenerationCelebration } from '@/components/ui/success-animation'
+import { useFirstGeneration } from '@/lib/hooks/use-first-visit'
 import { fileToBase64, getSessionId } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { Info } from 'lucide-react'
@@ -33,6 +36,9 @@ export default function GeneratePage() {
   const [generation, setGeneration] = useState<Generation | null>(null)
   const [isMock, setIsMock] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // First generation celebration
+  const { showCelebration, markFirstGeneration, closeCelebration } = useFirstGeneration()
 
   const handleImageSelect = useCallback((file: File, preview: string) => {
     setSelectedFile(file)
@@ -101,6 +107,9 @@ export default function GeneratePage() {
 
       setGeneration(data.generation)
       setIsMock(data.isMock || false)
+
+      // Trigger first generation celebration
+      markFirstGeneration()
     } catch (err) {
       console.error('Generation error:', err)
       setError('Failed to connect to server')
@@ -117,6 +126,12 @@ export default function GeneratePage() {
 
   return (
     <div className="bg-background">
+      {/* Onboarding tour for first-time users */}
+      <OnboardingTour />
+
+      {/* First generation celebration modal */}
+      <FirstGenerationCelebration show={showCelebration} onClose={closeCelebration} />
+
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-8">

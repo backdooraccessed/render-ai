@@ -35,7 +35,7 @@ export function GalleryCard({
     <Link href={href}>
       <Card
         className={cn(
-          'overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer group',
+          'overflow-hidden card-hover cursor-pointer group',
           isFeatured && 'ring-2 ring-primary'
         )}
         onMouseEnter={() => setIsHovered(true)}

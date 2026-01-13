@@ -1,16 +1,26 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { GenerationCard } from './generation-card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/empty-state'
 import type { Generation } from '@/types'
 
 interface GenerationGridProps {
   generations: Generation[]
   isLoading?: boolean
   onDelete?: (id: string) => void
+  emptyVariant?: 'history' | 'favorites'
 }
 
-export function GenerationGrid({ generations, isLoading, onDelete }: GenerationGridProps) {
+export function GenerationGrid({
+  generations,
+  isLoading,
+  onDelete,
+  emptyVariant = 'history',
+}: GenerationGridProps) {
+  const router = useRouter()
+
   if (isLoading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -26,17 +36,15 @@ export function GenerationGrid({ generations, isLoading, onDelete }: GenerationG
 
   if (generations.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">No generations yet.</p>
-        <p className="text-sm text-muted-foreground mt-1">
-          Create your first render to see it here.
-        </p>
-      </div>
+      <EmptyState
+        variant={emptyVariant}
+        onAction={() => router.push('/app')}
+      />
     )
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 stagger-children">
       {generations.map((generation) => (
         <GenerationCard
           key={generation.id}

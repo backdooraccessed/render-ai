@@ -14,6 +14,7 @@ import {
 import { Download, RefreshCw, AlertCircle, Share2, Check, Eye, EyeOff, ChevronDown, Heart, Share, Globe, Wand2 } from 'lucide-react'
 import { SocialExportButton } from '@/components/social-export-button'
 import { UpscaleButton } from '@/components/upscale-button'
+import { GenerationProgress } from '@/components/generation-progress'
 import { cn } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { toast } from 'sonner'
@@ -189,21 +190,14 @@ export function GenerationResult({
     setSliderPosition((x / rect.width) * 100)
   }
 
-  // Loading state
+  // Loading state with progress indicator
   if (isLoading) {
     return (
-      <Card className="p-4">
-        <div className="aspect-[4/3] relative">
+      <Card className="p-6">
+        <div className="aspect-[4/3] relative mb-6">
           <Skeleton className="w-full h-full rounded-lg" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-pulse text-muted-foreground">
-                <p className="text-sm font-medium">Generating your render...</p>
-                <p className="text-xs mt-1">This may take 15-30 seconds</p>
-              </div>
-            </div>
-          </div>
         </div>
+        <GenerationProgress isGenerating={isLoading} />
       </Card>
     )
   }
@@ -439,7 +433,10 @@ export function GenerationResult({
           disabled={isTogglingFavorite}
           className={cn(isFavorite && "text-red-500 hover:text-red-600")}
         >
-          <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
+          <Heart className={cn(
+            "h-4 w-4 transition-transform",
+            isFavorite && "fill-current animate-heart-pop"
+          )} />
         </Button>
 
         <Button
