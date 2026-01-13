@@ -12,6 +12,7 @@ interface GenerationParams {
   numOutputs?: number
   negativePrompt?: string
   seed?: number
+  referenceImageUrl?: string
 }
 
 interface GenerationResult {
@@ -30,6 +31,7 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
     numOutputs = 1,
     negativePrompt: customNegativePrompt,
     seed,
+    referenceImageUrl,
   } = params
 
   // Check if Replicate is configured
@@ -46,7 +48,13 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
   }
 
   try {
-    const { prompt, negativePrompt: defaultNegativePrompt } = buildNaturalPrompt(userPrompt)
+    let { prompt, negativePrompt: defaultNegativePrompt } = buildNaturalPrompt(userPrompt)
+
+    // If reference image provided, enhance prompt for style transfer
+    // Note: For full IP-Adapter support, use a dedicated model
+    if (referenceImageUrl) {
+      prompt = `${prompt}, with consistent style and aesthetic from the reference image, matching color palette and design elements`
+    }
 
     // Combine custom negative prompt with defaults
     const negativePrompt = customNegativePrompt

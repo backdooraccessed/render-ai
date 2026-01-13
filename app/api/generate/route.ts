@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const {
       imageData,
+      referenceImageData,
       prompt,
       strength = 0.5,
       sessionId,
@@ -60,6 +61,27 @@ export async function POST(request: NextRequest) {
 
     const inputImageUrl = publicUrlData.publicUrl
 
+    // Upload reference image if provided
+    let referenceImageUrl: string | undefined
+    if (referenceImageData) {
+      const refBuffer = Buffer.from(referenceImageData.split(',')[1], 'base64')
+      const refFileName = `reference-${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`
+
+      const { error: refUploadError } = await supabase.storage
+        .from('renders')
+        .upload(refFileName, refBuffer, {
+          contentType: 'image/jpeg',
+          upsert: false,
+        })
+
+      if (!refUploadError) {
+        const { data: refPublicUrl } = supabase.storage
+          .from('renders')
+          .getPublicUrl(refFileName)
+        referenceImageUrl = refPublicUrl.publicUrl
+      }
+    }
+
     // Create generation record
     const { data: generation, error: insertError } = await supabase
       .from('generations')
@@ -89,6 +111,7 @@ export async function POST(request: NextRequest) {
       numOutputs: Math.max(1, Math.min(4, numOutputs)), // Clamp between 1-4
       negativePrompt: negativePrompt?.trim() || undefined,
       seed: seed !== undefined ? seed : undefined,
+      referenceImageUrl,
     })
 
     if (!result.success) {

@@ -18,6 +18,12 @@ export interface Generation {
   negative_prompt?: string
   seed?: number
   strength?: number
+  // Sprint 3: Upscaling & Gallery
+  upscaled_image_url?: string
+  is_public?: boolean
+  is_featured?: boolean
+  view_count?: number
+  share_token?: string
 }
 
 export interface Style {

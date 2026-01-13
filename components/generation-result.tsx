@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -10,8 +11,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Download, RefreshCw, AlertCircle, Share2, Check, Eye, EyeOff, ChevronDown, Heart, Share } from 'lucide-react'
+import { Download, RefreshCw, AlertCircle, Share2, Check, Eye, EyeOff, ChevronDown, Heart, Share, Globe, Wand2 } from 'lucide-react'
 import { SocialExportButton } from '@/components/social-export-button'
+import { UpscaleButton } from '@/components/upscale-button'
 import { cn } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { toast } from 'sonner'
@@ -41,6 +43,8 @@ export function GenerationResult({
   const [selectedOutputIndex, setSelectedOutputIndex] = useState(0)
   const [isFavorite, setIsFavorite] = useState(generation?.is_favorite ?? false)
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false)
+  const [isPublic, setIsPublic] = useState(generation?.is_public ?? false)
+  const [isTogglingPublic, setIsTogglingPublic] = useState(false)
 
   // Get all output URLs (support both single and multiple outputs)
   const outputUrls = generation?.output_image_urls?.length
@@ -99,16 +103,27 @@ export function GenerationResult({
   }
 
   const handleShare = async () => {
-    if (!currentOutputUrl) return
+    if (!generation?.id) return
 
     try {
-      await navigator.clipboard.writeText(currentOutputUrl)
-      setCopied(true)
-      toast.success('Image URL copied to clipboard')
-      setTimeout(() => setCopied(false), 2000)
+      // Create share link via API
+      const response = await fetch(`/api/generations/${generation.id}/share`, {
+        method: 'POST',
+      })
+
+      const data = await response.json()
+
+      if (data.success && data.shareUrl) {
+        await navigator.clipboard.writeText(data.shareUrl)
+        setCopied(true)
+        toast.success('Share link copied to clipboard')
+        setTimeout(() => setCopied(false), 2000)
+      } else {
+        toast.error(data.error || 'Failed to create share link')
+      }
     } catch (error) {
-      console.error('Copy failed:', error)
-      toast.error('Failed to copy link')
+      console.error('Share failed:', error)
+      toast.error('Failed to create share link')
     }
   }
 
@@ -133,6 +148,30 @@ export function GenerationResult({
       toast.error('Failed to update favorite')
     } finally {
       setIsTogglingFavorite(false)
+    }
+  }
+
+  const handleTogglePublic = async () => {
+    if (!generation?.id || isTogglingPublic) return
+
+    setIsTogglingPublic(true)
+    try {
+      const response = await fetch(`/api/generations/${generation.id}/public`, {
+        method: 'POST',
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setIsPublic(data.is_public)
+        toast.success(data.is_public ? 'Added to public gallery' : 'Removed from public gallery')
+      } else {
+        toast.error('Failed to update visibility')
+      }
+    } catch (error) {
+      console.error('Public toggle failed:', error)
+      toast.error('Failed to update visibility')
+    } finally {
+      setIsTogglingPublic(false)
     }
   }
 
@@ -403,7 +442,32 @@ export function GenerationResult({
           <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
         </Button>
 
+        <Button
+          onClick={handleTogglePublic}
+          variant="outline"
+          size="icon"
+          disabled={isTogglingPublic}
+          title={isPublic ? "Remove from gallery" : "Add to gallery"}
+          className={cn(isPublic && "text-green-500 hover:text-green-600")}
+        >
+          <Globe className={cn("h-4 w-4", isPublic && "fill-current")} />
+        </Button>
+
         <SocialExportButton imageUrl={currentOutputUrl || ''} disabled={!currentOutputUrl} />
+
+        <UpscaleButton
+          imageUrl={currentOutputUrl || ''}
+          generationId={generation?.id}
+          disabled={!currentOutputUrl}
+        />
+
+        {generation?.id && (
+          <Button variant="outline" size="icon" asChild title="Edit with AI">
+            <Link href={`/app/edit/${generation.id}`}>
+              <Wand2 className="h-4 w-4" />
+            </Link>
+          </Button>
+        )}
 
         {onRegenerate && (
           <Button onClick={onRegenerate} variant="outline" size="icon">

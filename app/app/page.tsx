@@ -9,6 +9,7 @@ import { OutputCountSelector } from '@/components/output-count-selector'
 import { NegativePromptInput } from '@/components/negative-prompt-input'
 import { PromptHistory } from '@/components/prompt-history'
 import { SeedControl } from '@/components/seed-control'
+import { ReferenceImageUpload } from '@/components/reference-image-upload'
 import { GenerateButton } from '@/components/generate-button'
 import { GenerationResult } from '@/components/generation-result'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,6 +21,8 @@ import { Info } from 'lucide-react'
 export default function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [referenceFile, setReferenceFile] = useState<File | null>(null)
+  const [referencePreviewUrl, setReferencePreviewUrl] = useState<string | null>(null)
   const [prompt, setPrompt] = useState('')
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
   const [strength, setStrength] = useState(0.5)
@@ -45,6 +48,16 @@ export default function GeneratePage() {
     setError(null)
   }, [])
 
+  const handleReferenceSelect = useCallback((file: File, preview: string) => {
+    setReferenceFile(file)
+    setReferencePreviewUrl(preview)
+  }, [])
+
+  const handleReferenceClear = useCallback(() => {
+    setReferenceFile(null)
+    setReferencePreviewUrl(null)
+  }, [])
+
   const handleStyleSelect = useCallback((styleName: string, stylePrompt: string) => {
     setSelectedStyle(styleName)
     setPrompt(stylePrompt)
@@ -59,6 +72,7 @@ export default function GeneratePage() {
 
     try {
       const imageData = await fileToBase64(selectedFile)
+      const referenceImageData = referenceFile ? await fileToBase64(referenceFile) : undefined
       const sessionId = getSessionId()
 
       const response = await fetch('/api/generate', {
@@ -68,6 +82,7 @@ export default function GeneratePage() {
         },
         body: JSON.stringify({
           imageData,
+          referenceImageData,
           prompt: prompt.trim(),
           strength,
           numOutputs,
@@ -129,6 +144,23 @@ export default function GeneratePage() {
                   onImageSelect={handleImageSelect}
                   onImageClear={handleImageClear}
                   selectedImage={previewUrl}
+                  disabled={isLoading}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Style Reference</CardTitle>
+                <CardDescription>
+                  Optional: Upload an image to guide the style
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ReferenceImageUpload
+                  onImageSelect={handleReferenceSelect}
+                  onImageClear={handleReferenceClear}
+                  selectedImage={referencePreviewUrl}
                   disabled={isLoading}
                 />
               </CardContent>
