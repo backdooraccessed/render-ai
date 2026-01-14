@@ -13,9 +13,8 @@ export function CTA() {
       <div className="container mx-auto px-4 relative">
         <div className="max-w-3xl mx-auto text-center">
           {/* Headline */}
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl tracking-tight animate-fade-up">
-            <span className="text-[var(--surface-light)]">Ready to transform </span>
-            <span className="italic text-[var(--accent)]">your listings?</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-[var(--surface-light)] animate-fade-up">
+            Ready to transform your listings?
           </h2>
 
           <p className="mt-6 text-lg text-[var(--text-secondary)] max-w-xl mx-auto animate-fade-up delay-1">

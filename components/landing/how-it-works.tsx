@@ -30,9 +30,8 @@ export function HowItWorks() {
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-20">
           <span className="badge-studio animate-fade-up">How It Works</span>
-          <h2 className="mt-6 font-display text-4xl md:text-5xl tracking-tight animate-fade-up delay-1">
-            <span className="text-[var(--surface-light)]">Three steps to </span>
-            <span className="italic text-[var(--accent)]">stunning.</span>
+          <h2 className="mt-6 text-4xl md:text-5xl font-semibold tracking-tight text-[var(--surface-light)] animate-fade-up delay-1">
+            Three steps to stunning.
           </h2>
           <p className="mt-4 text-[var(--text-secondary)] text-lg animate-fade-up delay-2">
             No design skills required. Just upload, describe, and download.
@@ -65,7 +64,7 @@ export function HowItWorks() {
                     <step.icon className="h-7 w-7 text-[var(--accent)]" />
                   </div>
 
-                  <h3 className="font-display text-2xl text-[var(--surface-light)] mb-3">
+                  <h3 className="text-2xl font-semibold text-[var(--surface-light)] mb-3">
                     {step.title}
                   </h3>
                   <p className="text-[var(--text-secondary)] leading-relaxed">

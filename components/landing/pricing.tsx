@@ -63,9 +63,8 @@ export function Pricing() {
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-20">
           <span className="badge-studio animate-fade-up">Pricing</span>
-          <h2 className="mt-6 font-display text-4xl md:text-5xl tracking-tight animate-fade-up delay-1">
-            <span className="text-[var(--surface-light)]">Simple, </span>
-            <span className="italic text-[var(--accent)]">transparent.</span>
+          <h2 className="mt-6 text-4xl md:text-5xl font-semibold tracking-tight text-[var(--surface-light)] animate-fade-up delay-1">
+            Simple, transparent pricing.
           </h2>
           <p className="mt-4 text-[var(--text-secondary)] text-lg animate-fade-up delay-2">
             Start free, upgrade when you need more. No hidden fees.
@@ -95,7 +94,7 @@ export function Pricing() {
 
               {/* Plan header */}
               <div className="mb-6">
-                <h3 className="font-display text-2xl text-[var(--surface-light)]">
+                <h3 className="text-2xl font-semibold text-[var(--surface-light)]">
                   {plan.name}
                 </h3>
                 <p className="text-sm text-[var(--text-muted)] mt-1">
@@ -105,7 +104,7 @@ export function Pricing() {
 
               {/* Price */}
               <div className="mb-8">
-                <span className="font-display text-5xl text-[var(--surface-light)]">
+                <span className="text-5xl font-semibold text-[var(--surface-light)]">
                   {plan.price}
                 </span>
                 <span className="text-[var(--text-muted)] ml-1">

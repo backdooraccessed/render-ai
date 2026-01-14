@@ -20,15 +20,13 @@ export default function LoginPage() {
               <div className="absolute inset-2 rounded-md border border-[var(--accent)]/50" />
               <div className="absolute inset-4 rounded-sm bg-[var(--accent)]" />
             </div>
-            <span className="text-2xl tracking-tight">
-              <span className="font-display">Render</span>
-              <span className="font-display italic text-[var(--accent)]">AI</span>
+            <span className="text-2xl font-semibold tracking-tight">
+              RenderAI
             </span>
           </Link>
 
-          <h1 className="font-display text-4xl md:text-5xl tracking-tight mb-6">
-            <span className="text-[var(--surface-light)]">Welcome </span>
-            <span className="italic text-[var(--accent)]">back.</span>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-[var(--surface-light)] mb-6">
+            Welcome back.
           </h1>
           <p className="text-lg text-[var(--text-secondary)] leading-relaxed max-w-md">
             Continue transforming spaces into photorealistic renders. Your projects are waiting.

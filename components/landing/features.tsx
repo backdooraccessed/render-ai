@@ -42,9 +42,8 @@ export function Features() {
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-20">
           <span className="badge-studio animate-fade-up">Features</span>
-          <h2 className="mt-6 font-display text-4xl md:text-5xl tracking-tight animate-fade-up delay-1">
-            <span className="text-[var(--surface-light)]">Everything you need to </span>
-            <span className="italic text-[var(--accent)]">transform.</span>
+          <h2 className="mt-6 text-4xl md:text-5xl font-semibold tracking-tight text-[var(--surface-light)] animate-fade-up delay-1">
+            Everything you need to transform.
           </h2>
           <p className="mt-4 text-[var(--text-secondary)] text-lg animate-fade-up delay-2">
             Professional interior visualization made simple, fast, and affordable.
@@ -62,7 +61,7 @@ export function Features() {
               <div className="mb-4 h-12 w-12 rounded-lg bg-[var(--bg-tertiary)] border border-white/5 flex items-center justify-center">
                 <feature.icon className="h-6 w-6 text-[var(--accent)]" />
               </div>
-              <h3 className="font-display text-xl text-[var(--surface-light)] mb-2">
+              <h3 className="text-xl font-semibold text-[var(--surface-light)] mb-2">
                 {feature.title}
               </h3>
               <p className="text-[var(--text-secondary)] text-sm leading-relaxed">

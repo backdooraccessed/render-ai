@@ -108,9 +108,8 @@ export function Header() {
             <div className="absolute inset-1.5 rounded-md border border-[var(--accent)]/50 group-hover:border-[var(--accent)]/70 transition-colors" />
             <div className="absolute inset-3 rounded-sm bg-[var(--accent)] group-hover:shadow-[0_0_12px_var(--accent-glow)] transition-shadow" />
           </div>
-          <span className="text-xl tracking-tight">
-            <span className="font-display">Render</span>
-            <span className="font-display italic text-[var(--accent)]">AI</span>
+          <span className="text-xl font-semibold tracking-tight">
+            RenderAI
           </span>
         </Link>
 

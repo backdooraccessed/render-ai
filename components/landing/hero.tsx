@@ -22,9 +22,8 @@ export function Hero() {
           </div>
 
           {/* Headline */}
-          <h1 className="mt-8 font-display text-5xl md:text-6xl lg:text-7xl tracking-tight animate-fade-up delay-2">
-            <span className="text-[var(--surface-light)]">See the </span>
-            <span className="italic text-[var(--accent)]">potential.</span>
+          <h1 className="mt-8 text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight animate-fade-up delay-2">
+            <span className="text-[var(--surface-light)]">See the potential.</span>
           </h1>
 
           {/* Subheadline */}

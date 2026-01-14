@@ -21,15 +21,13 @@ export default function SignupPage() {
               <div className="absolute inset-2 rounded-md border border-[var(--accent)]/50" />
               <div className="absolute inset-4 rounded-sm bg-[var(--accent)]" />
             </div>
-            <span className="text-2xl tracking-tight">
-              <span className="font-display">Render</span>
-              <span className="font-display italic text-[var(--accent)]">AI</span>
+            <span className="text-2xl font-semibold tracking-tight">
+              RenderAI
             </span>
           </Link>
 
-          <h1 className="font-display text-4xl md:text-5xl tracking-tight mb-6">
-            <span className="text-[var(--surface-light)]">Start </span>
-            <span className="italic text-[var(--accent)]">creating.</span>
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-[var(--surface-light)] mb-6">
+            Start creating.
           </h1>
           <p className="text-lg text-[var(--text-secondary)] leading-relaxed max-w-md">
             Get started free with 5 renders per day. No credit card required.
@@ -53,7 +51,7 @@ export default function SignupPage() {
 
           {/* Testimonial */}
           <div className="mt-16 p-6 rounded-xl bg-[var(--bg-elevated)] border border-white/5">
-            <p className="font-display text-lg text-[var(--surface-light)] italic leading-relaxed">
+            <p className="text-lg text-[var(--surface-light)] leading-relaxed">
               &ldquo;RenderAI helped me sell a vacant listing in just 3 days. The AI staging made all the difference.&rdquo;
             </p>
             <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/5">

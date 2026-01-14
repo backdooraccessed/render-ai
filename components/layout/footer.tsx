@@ -15,9 +15,8 @@ export function Footer() {
               <div className="absolute inset-1 rounded-sm border border-[var(--accent)]/50" />
               <div className="absolute inset-2 rounded-[2px] bg-[var(--accent)]" />
             </div>
-            <span className="text-sm tracking-tight">
-              <span className="font-display">Render</span>
-              <span className="font-display italic text-[var(--accent)]">AI</span>
+            <span className="text-sm font-semibold tracking-tight">
+              RenderAI
             </span>
           </Link>
 

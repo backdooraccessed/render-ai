@@ -44,9 +44,8 @@ export function Footer() {
                 <div className="absolute inset-1 rounded-sm border border-[var(--accent)]/50" />
                 <div className="absolute inset-2 rounded-[2px] bg-[var(--accent)]" />
               </div>
-              <span className="text-lg tracking-tight">
-                <span className="font-display">Render</span>
-                <span className="font-display italic text-[var(--accent)]">AI</span>
+              <span className="text-lg font-semibold tracking-tight">
+                RenderAI
               </span>
             </Link>
             <p className="text-[var(--text-secondary)] mb-6 max-w-xs leading-relaxed">

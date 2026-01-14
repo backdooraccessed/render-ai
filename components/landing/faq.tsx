@@ -39,9 +39,8 @@ export function FAQ() {
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-20">
           <span className="badge-studio animate-fade-up">FAQ</span>
-          <h2 className="mt-6 font-display text-4xl md:text-5xl tracking-tight animate-fade-up delay-1">
-            <span className="text-[var(--surface-light)]">Common </span>
-            <span className="italic text-[var(--accent)]">questions.</span>
+          <h2 className="mt-6 text-4xl md:text-5xl font-semibold tracking-tight text-[var(--surface-light)] animate-fade-up delay-1">
+            Common questions.
           </h2>
           <p className="mt-4 text-[var(--text-secondary)] text-lg animate-fade-up delay-2">
             Everything you need to know about RenderAI.

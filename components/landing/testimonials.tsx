@@ -30,9 +30,8 @@ export function Testimonials() {
         {/* Header */}
         <div className="max-w-2xl mx-auto text-center mb-20">
           <span className="badge-studio animate-fade-up">Testimonials</span>
-          <h2 className="mt-6 font-display text-4xl md:text-5xl tracking-tight animate-fade-up delay-1">
-            <span className="text-[var(--surface-light)]">Loved by </span>
-            <span className="italic text-[var(--accent)]">professionals.</span>
+          <h2 className="mt-6 text-4xl md:text-5xl font-semibold tracking-tight text-[var(--surface-light)] animate-fade-up delay-1">
+            Loved by professionals.
           </h2>
           <p className="mt-4 text-[var(--text-secondary)] text-lg animate-fade-up delay-2">
             See what real estate agents and designers are saying.
@@ -51,7 +50,7 @@ export function Testimonials() {
               <Quote className="h-8 w-8 text-[var(--accent)]/30 mb-6" />
 
               {/* Quote text */}
-              <blockquote className="font-display text-lg text-[var(--surface-light)] leading-relaxed mb-8">
+              <blockquote className="text-lg text-[var(--surface-light)] leading-relaxed mb-8">
                 &ldquo;{testimonial.quote}&rdquo;
               </blockquote>
 
