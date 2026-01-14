@@ -84,6 +84,15 @@ export function Header() {
                 Generate
               </Link>
               <Link
+                href="/app/stage"
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  pathname === '/app/stage' ? 'text-primary' : 'text-muted-foreground'
+                )}
+              >
+                Stage
+              </Link>
+              <Link
                 href="/app/batch"
                 className={cn(
                   "text-sm font-medium transition-colors hover:text-primary",
