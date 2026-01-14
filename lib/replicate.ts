@@ -23,35 +23,17 @@ interface GenerationResult {
   isMock?: boolean
 }
 
-/**
- * Map SDXL-style strength (0.2-0.8) to Flux denoising (0.6-0.95)
- * Flux requires higher denoising values for visible changes
- */
-function mapStrengthToFluxDenoising(strength: number): number {
-  // SDXL strength 0.2 → Flux 0.6 (minimal change)
-  // SDXL strength 0.5 → Flux 0.75 (moderate change)
-  // SDXL strength 0.8 → Flux 0.9 (significant change)
-  const minFlux = 0.6
-  const maxFlux = 0.92
-  const normalized = Math.max(0, Math.min(1, strength))
-  return minFlux + (normalized * (maxFlux - minFlux))
-}
-
 export async function generateInteriorRender(params: GenerationParams): Promise<GenerationResult> {
   const {
     imageUrl,
     userPrompt,
-    strength = 0.5,
     numOutputs = 1,
-    negativePrompt: customNegativePrompt,
     seed,
-    referenceImageUrl,
   } = params
 
   // Check if Replicate is configured
   if (!replicate) {
     console.log('Replicate API not configured, returning mock result')
-    // Return mock outputs based on numOutputs
     const mockOutputs = Array.from({ length: numOutputs }, () => imageUrl)
     return {
       success: true,
@@ -64,59 +46,53 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
   try {
     let { prompt } = buildNaturalPrompt(userPrompt)
 
-    // Enhance prompt for interior design quality
-    prompt = `${prompt}, professional interior photography, high quality, detailed, sharp focus, well-lit`
+    // Enhance prompt for interior design editing
+    prompt = `Transform this room: ${prompt}. Professional interior photography, high quality, detailed, sharp focus, well-lit, photorealistic`
 
-    // If reference image provided, enhance prompt for style transfer
-    if (referenceImageUrl) {
-      prompt = `${prompt}, with consistent style and aesthetic from the reference image, matching color palette and design elements`
+    // Build input params for P-Image-Edit (fast ~2 second generation)
+    const inputParams: Record<string, unknown> = {
+      images: [imageUrl],
+      prompt: prompt,
+      turbo: true,
+      aspect_ratio: 'match_input_image',
     }
 
-    // Map strength to Flux denoising value
-    const denoising = mapStrengthToFluxDenoising(strength)
+    // Add seed if provided
+    if (seed !== undefined) {
+      inputParams.seed = seed
+    }
 
-    // Generate multiple outputs sequentially (Flux model does 1 at a time)
+    // Generate outputs (run multiple times for multiple outputs)
     const outputUrls: string[] = []
 
     for (let i = 0; i < numOutputs; i++) {
-      // Build input params for Flux img2img
-      const inputParams: Record<string, unknown> = {
-        image: imageUrl,
-        positive_prompt: prompt,
-        denoising: denoising,
-        steps: 28, // Higher steps for better quality
-        sampler_name: 'euler',
-        scheduler: 'simple',
-      }
-
-      // Add seed if provided (increment for variations)
-      if (seed !== undefined) {
-        inputParams.seed = seed + i
-      } else if (numOutputs > 1) {
-        // Use random seeds for variations
+      // Add variation to seed for multiple outputs
+      if (numOutputs > 1 && seed === undefined) {
         inputParams.seed = Math.floor(Math.random() * 1000000) + i
+      } else if (seed !== undefined && i > 0) {
+        inputParams.seed = seed + i
       }
 
-      // Using Flux img2img for higher quality interior rendering
+      // Using P-Image-Edit for fast img2img (~2 seconds)
       const output = await replicate.run(
-        'bxclib2/flux_img2img:0ce45202d83c6bd379dfe58f4c0c41e6cadf93ebbd9d938cc63cc0f2fcb729a5',
+        'prunaai/p-image-edit',
         {
           input: inputParams,
         }
       )
 
-      // Output can be a FileOutput object, string, or array
-      if (Array.isArray(output) && output.length > 0) {
-        const firstOutput = output[0]
-        if (firstOutput && typeof firstOutput === 'object' && 'toString' in firstOutput) {
-          outputUrls.push(firstOutput.toString())
-        } else {
-          outputUrls.push(String(firstOutput))
+      // Parse output
+      if (Array.isArray(output)) {
+        for (const item of output) {
+          if (item && typeof item === 'object' && 'toString' in item) {
+            outputUrls.push(item.toString())
+          } else if (typeof item === 'string') {
+            outputUrls.push(item)
+          }
         }
       } else if (typeof output === 'string') {
         outputUrls.push(output)
       } else if (output && typeof output === 'object' && 'toString' in output) {
-        // FileOutput object - call toString() to get URL
         outputUrls.push(output.toString())
       }
     }
@@ -131,7 +107,7 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
     return {
       success: true,
       outputUrls,
-      predictionId: 'flux-' + Date.now(),
+      predictionId: 'p-image-edit-' + Date.now(),
     }
   } catch (error) {
     console.error('Replicate generation error:', error)
