@@ -81,7 +81,7 @@ export function Hero() {
 
             <div className="relative bg-[var(--bg-elevated)] p-2 rounded-2xl">
               <ImageCompareSlider
-                beforeImage="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80"
+                beforeImage="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=1200&q=80"
                 afterImage="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80"
                 beforeLabel="Before"
                 afterLabel="After"
