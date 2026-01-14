@@ -81,10 +81,10 @@ export function Hero() {
 
             <div className="relative bg-[var(--bg-elevated)] p-2 rounded-2xl">
               <ImageCompareSlider
-                beforeImage="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=1200&q=80"
-                afterImage="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80"
-                beforeLabel="Before"
-                afterLabel="After"
+                beforeImage="https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=1200&q=80"
+                afterImage="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&q=80"
+                beforeLabel="Empty"
+                afterLabel="Staged"
                 className="rounded-xl overflow-hidden aspect-[16/10]"
               />
             </div>
