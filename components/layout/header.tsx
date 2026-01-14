@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { UserMenu } from '@/components/auth/user-menu'
 import { createClient } from '@/lib/supabase/client'
-import { Sparkles, Menu, X, ArrowRight } from 'lucide-react'
+import { Menu, X, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/lib/auth'
@@ -44,7 +44,6 @@ export function Header() {
   useEffect(() => {
     const supabase = createClient()
 
-    // Get initial session
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
@@ -63,7 +62,6 @@ export function Header() {
 
     getUser()
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setUser(session?.user ?? null)
@@ -86,7 +84,6 @@ export function Header() {
     }
   }, [])
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false)
   }, [pathname])
@@ -101,15 +98,19 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-[var(--bg-primary)]/90 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="h-9 w-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-            <Sparkles className="h-5 w-5 text-white" />
+        <Link href="/" className="flex items-center gap-3 group">
+          {/* The Frame logo mark */}
+          <div className="relative h-9 w-9">
+            <div className="absolute inset-0 rounded-lg border border-[var(--accent)]/30 group-hover:border-[var(--accent)]/50 transition-colors" />
+            <div className="absolute inset-1.5 rounded-md border border-[var(--accent)]/50 group-hover:border-[var(--accent)]/70 transition-colors" />
+            <div className="absolute inset-3 rounded-sm bg-[var(--accent)] group-hover:shadow-[0_0_12px_var(--accent-glow)] transition-shadow" />
           </div>
-          <span className="text-xl font-bold">
-            Render<span className="text-gradient-brand">AI</span>
+          <span className="text-xl tracking-tight">
+            <span className="font-display">Render</span>
+            <span className="font-display italic text-[var(--accent)]">AI</span>
           </span>
         </Link>
 
@@ -120,10 +121,10 @@ export function Header() {
               key={link.href}
               href={link.href}
               className={cn(
-                "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
+                "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300",
                 isActiveLink(link.href, link.matchPrefix)
-                  ? 'text-foreground bg-muted'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                  ? 'text-[var(--text-primary)] bg-white/5'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5'
               )}
             >
               {link.label}
@@ -138,10 +139,10 @@ export function Header() {
               <UserMenu user={{ email: user.email }} profile={profile} />
             ) : (
               <>
-                <Button asChild variant="ghost" size="sm" className="text-muted-foreground">
+                <Button asChild variant="ghost" size="sm" className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                   <Link href="/login">Sign In</Link>
                 </Button>
-                <Button asChild size="sm" className="btn-gradient gap-1.5 rounded-lg">
+                <Button asChild size="sm" className="btn-accent gap-2 rounded-lg px-4">
                   <Link href="/signup">
                     Get Started
                     <ArrowRight className="h-4 w-4" />
@@ -154,7 +155,7 @@ export function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+          className="md:hidden p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -168,8 +169,8 @@ export function Header() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t bg-background">
-          <div className="container mx-auto px-4 py-4 space-y-2">
+        <div className="md:hidden border-t border-white/5 bg-[var(--bg-secondary)]">
+          <div className="container mx-auto px-4 py-4 space-y-1">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -177,32 +178,31 @@ export function Header() {
                 className={cn(
                   "block px-4 py-3 text-sm font-medium rounded-lg transition-colors",
                   isActiveLink(link.href, link.matchPrefix)
-                    ? 'text-foreground bg-muted'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                    ? 'text-[var(--text-primary)] bg-white/5'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5'
                 )}
               >
                 {link.label}
               </Link>
             ))}
 
-            {/* Mobile Auth */}
-            <div className="pt-4 border-t mt-4 space-y-2">
+            <div className="pt-4 mt-4 border-t border-white/5 space-y-2">
               {!isLoading && (
                 user ? (
-                  <div className="px-4 py-2 text-sm text-muted-foreground">
+                  <div className="px-4 py-2 text-sm text-[var(--text-muted)]">
                     Signed in as {user.email}
                   </div>
                 ) : (
                   <>
                     <Link
                       href="/login"
-                      className="block px-4 py-3 text-sm font-medium text-muted-foreground rounded-lg hover:bg-muted/50 transition-colors"
+                      className="block px-4 py-3 text-sm font-medium text-[var(--text-muted)] rounded-lg hover:bg-white/5 transition-colors"
                     >
                       Sign In
                     </Link>
                     <Link
                       href="/signup"
-                      className="block px-4 py-3 text-sm font-medium text-white rounded-lg bg-gradient-brand text-center"
+                      className="block px-4 py-3 text-sm font-medium text-[var(--bg-primary)] rounded-lg bg-[var(--accent)] text-center hover:bg-[var(--accent-hover)] transition-colors"
                     >
                       Get Started Free
                     </Link>

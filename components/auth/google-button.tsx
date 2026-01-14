@@ -28,7 +28,7 @@ export function GoogleButton() {
   return (
     <Button
       variant="outline"
-      className="w-full h-11 gap-3 font-medium"
+      className="w-full h-11 gap-3 font-medium bg-[var(--bg-elevated)] border-white/10 text-[var(--surface-light)] hover:bg-white/5 hover:border-white/20"
       onClick={handleGoogleLogin}
       disabled={isLoading}
     >

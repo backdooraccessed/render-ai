@@ -14,7 +14,7 @@ const faqs = [
   },
   {
     question: 'Can I use the renders commercially?',
-    answer: 'Yes! All renders you create with RenderAI are yours to use commercially. You can use them in real estate listings, marketing materials, social media, and presentations without any additional licensing.',
+    answer: 'Yes! All renders you create with RenderAI are yours to use commercially. You can use them in real estate listings, marketing materials, social media, and presentations.',
   },
   {
     question: 'What happens to my uploaded images?',
@@ -25,7 +25,7 @@ const faqs = [
     answer: 'Absolutely! Our free tier gives you 5 renders per day with no credit card required. This lets you experience the full power of RenderAI before deciding to upgrade.',
   },
   {
-    question: 'What\'s the difference between Pro and Business?',
+    question: "What's the difference between Pro and Business?",
     answer: 'Pro is designed for individual agents and designers who need more renders (100/month) and high-resolution output. Business adds team accounts (5 users), API access, and priority support—perfect for brokerages and agencies.',
   },
 ]
@@ -34,49 +34,52 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="py-20 md:py-28 bg-background">
+    <section id="faq" className="py-24 md:py-32 bg-[var(--bg-primary)]">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl text-center mb-16">
-          <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm mb-4">
-            <span className="text-gradient-brand font-medium">FAQ</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-            Frequently Asked{' '}
-            <span className="text-gradient-brand">Questions</span>
+        {/* Header */}
+        <div className="max-w-2xl mx-auto text-center mb-20">
+          <span className="badge-studio animate-fade-up">FAQ</span>
+          <h2 className="mt-6 font-display text-4xl md:text-5xl tracking-tight animate-fade-up delay-1">
+            <span className="text-[var(--surface-light)]">Common </span>
+            <span className="italic text-[var(--accent)]">questions.</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="mt-4 text-[var(--text-secondary)] text-lg animate-fade-up delay-2">
             Everything you need to know about RenderAI.
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div
-                key={index}
-                className="border rounded-xl bg-card overflow-hidden"
+        {/* FAQ items */}
+        <div className="max-w-3xl mx-auto space-y-4">
+          {faqs.map((faq, index) => (
+            <div
+              key={index}
+              className="card-studio overflow-hidden animate-fade-up"
+              style={{ animationDelay: `${(index + 3) * 50}ms` }}
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors"
               >
-                <button
-                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 hover:bg-muted/50 transition-colors"
-                >
-                  <span className="font-medium">{faq.question}</span>
-                  <ChevronDown
-                    className={`h-5 w-5 text-muted-foreground shrink-0 transition-transform duration-200 ${
-                      openIndex === index ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-                <div
-                  className={`px-6 overflow-hidden transition-all duration-200 ${
-                    openIndex === index ? 'pb-4' : 'max-h-0'
+                <span className="font-medium text-[var(--surface-light)]">
+                  {faq.question}
+                </span>
+                <ChevronDown
+                  className={`h-5 w-5 text-[var(--text-muted)] shrink-0 transition-transform duration-300 ${
+                    openIndex === index ? 'rotate-180' : ''
                   }`}
-                >
-                  <p className="text-muted-foreground">{faq.answer}</p>
-                </div>
+                />
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${
+                  openIndex === index ? 'max-h-48' : 'max-h-0'
+                }`}
+              >
+                <p className="px-6 pb-5 text-[var(--text-secondary)] leading-relaxed">
+                  {faq.answer}
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

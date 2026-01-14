@@ -2,37 +2,32 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export function CTA() {
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-brand opacity-[0.03]" />
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-pink-500/20 to-violet-500/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-violet-500/20 to-teal-500/20 rounded-full blur-3xl" />
+    <section className="py-24 md:py-32 bg-[var(--bg-secondary)] relative overflow-hidden">
+      {/* Ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--accent)]/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 relative">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-1.5 text-sm text-white mb-6">
-            <Sparkles className="h-4 w-4" />
-            <span className="font-medium">Start transforming spaces today</span>
-          </div>
-
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-            Ready to Transform{' '}
-            <span className="text-gradient-brand">Your Listings?</span>
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Headline */}
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl tracking-tight animate-fade-up">
+            <span className="text-[var(--surface-light)]">Ready to transform </span>
+            <span className="italic text-[var(--accent)]">your listings?</span>
           </h2>
 
-          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            Join thousands of real estate professionals using AI to create stunning property visuals. No credit card required to get started.
+          <p className="mt-6 text-lg text-[var(--text-secondary)] max-w-xl mx-auto animate-fade-up delay-1">
+            Join thousands of real estate professionals using AI to create stunning property visuals. No credit card required.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 animate-fade-up delay-2">
             <Button
               asChild
               size="lg"
-              className="btn-gradient glow-gradient gap-2 text-lg h-12 px-8 rounded-xl"
+              className="btn-accent gap-2 text-base h-12 px-8 rounded-xl glow-accent"
             >
               <Link href="/signup">
                 Get Started Free
@@ -43,14 +38,14 @@ export function CTA() {
               asChild
               variant="outline"
               size="lg"
-              className="h-12 px-8 rounded-xl"
+              className="btn-ghost h-12 px-8 rounded-xl"
             >
               <Link href="#pricing">View Pricing</Link>
             </Button>
           </div>
 
-          <p className="mt-6 text-sm text-muted-foreground">
-            No credit card required. 5 free renders daily.
+          <p className="mt-8 text-sm text-[var(--text-muted)] animate-fade-up delay-3">
+            No credit card required · 5 free renders daily
           </p>
         </div>
       </div>

@@ -1,81 +1,72 @@
 'use client'
 
-import { Star, Quote } from 'lucide-react'
+import { Quote } from 'lucide-react'
 
 const testimonials = [
   {
-    quote: "Sold a vacant listing in just 3 days after adding AI-staged renders to the photos. The buyers said the staging helped them visualize the space perfectly.",
+    quote: "Sold a vacant listing in just 3 days after adding AI-staged renders. The buyers said the staging helped them visualize the space perfectly.",
     author: "Sarah Mitchell",
     role: "Real Estate Agent",
     company: "Compass Realty",
-    rating: 5,
   },
   {
-    quote: "I used to spend $500+ per room on professional staging photos. Now I get better results in 30 seconds for a fraction of the cost. Game changer for my business.",
+    quote: "I used to spend $500+ per room on professional staging photos. Now I get better results in 30 seconds for a fraction of the cost.",
     author: "Michael Chen",
     role: "Property Investor",
     company: "Chen Properties",
-    rating: 5,
   },
   {
-    quote: "My clients love seeing design concepts before committing to furniture purchases. RenderAI has transformed how I present ideas and close deals faster.",
+    quote: "My clients love seeing design concepts before committing to furniture purchases. RenderAI has transformed how I present ideas.",
     author: "Emma Rodriguez",
     role: "Interior Designer",
     company: "Studio ER Design",
-    rating: 5,
   },
 ]
 
 export function Testimonials() {
   return (
-    <section className="py-20 md:py-28 bg-background">
+    <section className="py-24 md:py-32 bg-[var(--bg-primary)]">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl text-center mb-16">
-          <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm mb-4">
-            <span className="text-gradient-brand font-medium">Testimonials</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-            Loved by{' '}
-            <span className="text-gradient-brand">Professionals</span>
+        {/* Header */}
+        <div className="max-w-2xl mx-auto text-center mb-20">
+          <span className="badge-studio animate-fade-up">Testimonials</span>
+          <h2 className="mt-6 font-display text-4xl md:text-5xl tracking-tight animate-fade-up delay-1">
+            <span className="text-[var(--surface-light)]">Loved by </span>
+            <span className="italic text-[var(--accent)]">professionals.</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
-            See what real estate agents and designers are saying about RenderAI.
+          <p className="mt-4 text-[var(--text-secondary)] text-lg animate-fade-up delay-2">
+            See what real estate agents and designers are saying.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
-          {testimonials.map((testimonial) => (
+        {/* Testimonials grid */}
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.author}
-              className="relative bg-card rounded-2xl border p-8 card-hover"
+              className="card-studio p-8 animate-fade-up"
+              style={{ animationDelay: `${(index + 3) * 100}ms` }}
             >
               {/* Quote icon */}
-              <div className="absolute -top-4 left-6">
-                <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-brand shadow-lg">
-                  <Quote className="h-4 w-4 text-white" />
-                </div>
-              </div>
+              <Quote className="h-8 w-8 text-[var(--accent)]/30 mb-6" />
 
-              {/* Rating */}
-              <div className="flex gap-0.5 mb-4 mt-2">
-                {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-
-              {/* Quote */}
-              <p className="text-foreground mb-6 leading-relaxed">
+              {/* Quote text */}
+              <blockquote className="font-display text-lg text-[var(--surface-light)] leading-relaxed mb-8">
                 &ldquo;{testimonial.quote}&rdquo;
-              </p>
+              </blockquote>
 
               {/* Author */}
-              <div className="flex items-center gap-3 pt-4 border-t">
-                <div className="h-10 w-10 rounded-full bg-gradient-brand flex items-center justify-center text-white font-semibold">
-                  {testimonial.author.split(' ').map(n => n[0]).join('')}
+              <div className="flex items-center gap-4 pt-6 border-t border-white/5">
+                <div className="h-10 w-10 rounded-full bg-[var(--accent)]/10 flex items-center justify-center">
+                  <span className="text-sm font-medium text-[var(--accent)]">
+                    {testimonial.author.split(' ').map(n => n[0]).join('')}
+                  </span>
                 </div>
                 <div>
-                  <div className="font-semibold text-sm">{testimonial.author}</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm font-medium text-[var(--surface-light)]">
+                    {testimonial.author}
+                  </div>
+                  <div className="text-xs text-[var(--text-muted)]">
                     {testimonial.role}, {testimonial.company}
                   </div>
                 </div>

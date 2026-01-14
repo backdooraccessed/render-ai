@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { GoogleButton } from '@/components/auth/google-button'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Sparkles, ArrowRight } from 'lucide-react'
+import { Loader2, ArrowRight } from 'lucide-react'
 
 export function SignupForm() {
   const router = useRouter()
@@ -51,18 +51,22 @@ export function SignupForm() {
       {/* Mobile logo */}
       <div className="lg:hidden flex justify-center mb-8">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="h-10 w-10 rounded-xl bg-gradient-brand flex items-center justify-center">
-            <Sparkles className="h-5 w-5 text-white" />
+          {/* The Frame logo mark */}
+          <div className="relative h-10 w-10">
+            <div className="absolute inset-0 rounded-lg border border-[var(--accent)]/30" />
+            <div className="absolute inset-1.5 rounded-md border border-[var(--accent)]/50" />
+            <div className="absolute inset-3 rounded-sm bg-[var(--accent)]" />
           </div>
-          <span className="text-xl font-bold">
-            Render<span className="text-gradient-brand">AI</span>
+          <span className="text-xl tracking-tight">
+            <span className="font-display">Render</span>
+            <span className="font-display italic text-[var(--accent)]">AI</span>
           </span>
         </Link>
       </div>
 
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold mb-2">Create an account</h1>
-        <p className="text-muted-foreground">Get started with RenderAI for free</p>
+        <h1 className="font-display text-2xl text-[var(--surface-light)] mb-2">Create an account</h1>
+        <p className="text-[var(--text-secondary)]">Get started with RenderAI for free</p>
       </div>
 
       <div className="space-y-6">
@@ -70,10 +74,10 @@ export function SignupForm() {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
+            <span className="w-full border-t border-white/10" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
+            <span className="bg-[var(--bg-primary)] px-2 text-[var(--text-muted)]">
               Or continue with email
             </span>
           </div>
@@ -81,7 +85,7 @@ export function SignupForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
+            <Label htmlFor="fullName" className="text-[var(--text-secondary)]">Full Name</Label>
             <Input
               id="fullName"
               type="text"
@@ -89,11 +93,11 @@ export function SignupForm() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               disabled={isLoading}
-              className="h-11"
+              className="h-11 bg-[var(--bg-elevated)] border-white/10 text-[var(--surface-light)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)]/50 focus:ring-[var(--accent)]/20"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-[var(--text-secondary)]">Email</Label>
             <Input
               id="email"
               type="email"
@@ -102,11 +106,11 @@ export function SignupForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
-              className="h-11"
+              className="h-11 bg-[var(--bg-elevated)] border-white/10 text-[var(--surface-light)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)]/50 focus:ring-[var(--accent)]/20"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-[var(--text-secondary)]">Password</Label>
             <Input
               id="password"
               type="password"
@@ -116,22 +120,22 @@ export function SignupForm() {
               required
               minLength={6}
               disabled={isLoading}
-              className="h-11"
+              className="h-11 bg-[var(--bg-elevated)] border-white/10 text-[var(--surface-light)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)]/50 focus:ring-[var(--accent)]/20"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-[var(--text-muted)]">
               At least 6 characters
             </p>
           </div>
 
           {error && (
-            <Alert variant="destructive">
+            <Alert variant="destructive" className="bg-red-500/10 border-red-500/20 text-red-400">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
           <Button
             type="submit"
-            className="w-full h-11 btn-gradient gap-2"
+            className="w-full h-11 btn-accent gap-2"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -145,20 +149,20 @@ export function SignupForm() {
           </Button>
         </form>
 
-        <p className="text-xs text-center text-muted-foreground">
+        <p className="text-xs text-center text-[var(--text-muted)]">
           By signing up, you agree to our{' '}
-          <Link href="/terms" className="underline hover:text-foreground">
+          <Link href="/terms" className="underline hover:text-[var(--surface-light)]">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href="/privacy" className="underline hover:text-foreground">
+          <Link href="/privacy" className="underline hover:text-[var(--surface-light)]">
             Privacy Policy
           </Link>
         </p>
 
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-[var(--text-muted)]">
           Already have an account?{' '}
-          <Link href="/login" className="text-gradient-brand font-medium hover:underline">
+          <Link href="/login" className="text-[var(--accent)] font-medium hover:underline">
             Sign in
           </Link>
         </p>

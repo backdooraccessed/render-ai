@@ -1,56 +1,64 @@
 import Link from 'next/link'
 import { LoginForm } from '@/components/auth/login-form'
-import { Sparkles } from 'lucide-react'
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-[var(--bg-primary)]">
       {/* Left side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-brand relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+      <div className="hidden lg:flex lg:w-1/2 bg-[var(--bg-secondary)] relative overflow-hidden">
+        {/* Ambient glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[var(--accent)]/5 rounded-full blur-3xl" />
 
-        <div className="relative z-10 flex flex-col justify-center px-12 text-white">
-          <Link href="/" className="flex items-center gap-3 mb-12">
-            <div className="h-12 w-12 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
-              <Sparkles className="h-7 w-7 text-white" />
+        {/* Film grain overlay */}
+        <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMSIvPjwvc3ZnPg==')]" />
+
+        <div className="relative z-10 flex flex-col justify-center px-16 max-w-xl">
+          <Link href="/" className="flex items-center gap-3 mb-16">
+            {/* The Frame logo mark */}
+            <div className="relative h-12 w-12">
+              <div className="absolute inset-0 rounded-lg border border-[var(--accent)]/30" />
+              <div className="absolute inset-2 rounded-md border border-[var(--accent)]/50" />
+              <div className="absolute inset-4 rounded-sm bg-[var(--accent)]" />
             </div>
-            <span className="text-2xl font-bold">RenderAI</span>
+            <span className="text-2xl tracking-tight">
+              <span className="font-display">Render</span>
+              <span className="font-display italic text-[var(--accent)]">AI</span>
+            </span>
           </Link>
 
-          <h1 className="text-4xl font-bold mb-4">
-            Transform Spaces<br />with AI
+          <h1 className="font-display text-4xl md:text-5xl tracking-tight mb-6">
+            <span className="text-[var(--surface-light)]">Welcome </span>
+            <span className="italic text-[var(--accent)]">back.</span>
           </h1>
-          <p className="text-lg text-white/80 max-w-md">
-            Join thousands of real estate professionals using AI to create stunning property visuals in seconds.
+          <p className="text-lg text-[var(--text-secondary)] leading-relaxed max-w-md">
+            Continue transforming spaces into photorealistic renders. Your projects are waiting.
           </p>
 
-          <div className="mt-12 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-sm font-bold">1</span>
+          <div className="mt-16 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 rounded-lg border border-white/10 flex items-center justify-center">
+                <span className="text-sm font-medium text-[var(--accent)]">01</span>
               </div>
-              <span className="text-white/90">Upload any room photo</span>
+              <span className="text-[var(--text-secondary)]">Upload any room photo</span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-sm font-bold">2</span>
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 rounded-lg border border-white/10 flex items-center justify-center">
+                <span className="text-sm font-medium text-[var(--accent)]">02</span>
               </div>
-              <span className="text-white/90">Describe your vision</span>
+              <span className="text-[var(--text-secondary)]">Describe your vision</span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-sm font-bold">3</span>
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 rounded-lg border border-white/10 flex items-center justify-center">
+                <span className="text-sm font-medium text-[var(--accent)]">03</span>
               </div>
-              <span className="text-white/90">Get stunning renders in 30 seconds</span>
+              <span className="text-[var(--text-secondary)]">Get stunning renders in seconds</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Right side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center bg-background px-4 py-12">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 py-12 bg-[var(--bg-primary)]">
         <LoginForm />
       </div>
     </div>

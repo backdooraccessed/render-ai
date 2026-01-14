@@ -3,55 +3,53 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Play, Sparkles, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, Play, X } from 'lucide-react'
 import { ImageCompareSlider } from '@/components/ui/image-compare-slider'
 
 export function Hero() {
   const [isVideoOpen, setIsVideoOpen] = useState(false)
 
   return (
-    <section className="relative overflow-hidden hero-gradient-bg">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-1/4 w-72 h-72 bg-gradient-to-r from-pink-500/20 to-violet-500/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-r from-violet-500/20 to-teal-500/20 rounded-full blur-3xl" />
-
-      <div className="container relative mx-auto px-4 py-20 md:py-32">
+    <section className="relative overflow-hidden hero-bg-studio grain-overlay">
+      <div className="container relative mx-auto px-4 py-24 md:py-32 lg:py-40">
         <div className="mx-auto max-w-4xl text-center">
           {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-1.5 text-sm text-white shadow-lg">
-            <Sparkles className="h-4 w-4" />
-            <span className="font-medium">AI-Powered Virtual Staging</span>
+          <div className="animate-fade-up delay-1">
+            <span className="badge-studio">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+              Virtual Staging
+            </span>
           </div>
 
           {/* Headline */}
-          <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
-            <span className="text-gradient-brand">AI Staging</span>
-            <br />
-            <span className="text-foreground">in Seconds</span>
+          <h1 className="mt-8 font-display text-5xl md:text-6xl lg:text-7xl tracking-tight animate-fade-up delay-2">
+            <span className="text-[var(--surface-light)]">See the </span>
+            <span className="italic text-[var(--accent)]">potential.</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="mb-8 text-lg text-muted-foreground md:text-xl max-w-2xl mx-auto">
-            Transform empty rooms into beautifully staged renders instantly.
-            No designers, no waiting, no hassle.
+          <p className="mt-6 text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed animate-fade-up delay-3">
+            Transform empty spaces into photorealistic renders in seconds.
+            <br className="hidden md:block" />
+            No designers. No waiting. Just results.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 animate-fade-up delay-4">
             <Button
               asChild
               size="lg"
-              className="btn-gradient glow-gradient gap-2 text-lg h-12 px-8 rounded-xl"
+              className="btn-accent gap-2 text-base h-12 px-8 rounded-xl glow-accent"
             >
               <Link href="/signup">
-                Try Free
+                Start Creating
                 <ArrowRight className="h-5 w-5" />
               </Link>
             </Button>
             <Button
               variant="outline"
               size="lg"
-              className="gap-2 h-12 px-8 rounded-xl"
+              className="btn-ghost gap-2 h-12 px-8 rounded-xl"
               onClick={() => setIsVideoOpen(true)}
             >
               <Play className="h-5 w-5" />
@@ -59,58 +57,66 @@ export function Hero() {
             </Button>
           </div>
 
-          {/* Trust badges */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
+          {/* Trust indicators */}
+          <div className="flex flex-wrap items-center justify-center gap-8 mt-10 text-sm text-[var(--text-muted)] animate-fade-up delay-5">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-teal-500" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--success)]" />
               <span>No credit card required</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-teal-500" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--success)]" />
               <span>30-second renders</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-teal-500" />
-              <span>5 free renders daily</span>
+              <div className="h-1.5 w-1.5 rounded-full bg-[var(--success)]" />
+              <span>5 free daily</span>
             </div>
           </div>
         </div>
 
         {/* Before/After Slider */}
-        <div className="mt-16 mx-auto max-w-4xl">
-          <div className="relative rounded-2xl border bg-card/50 backdrop-blur p-3 shadow-2xl glass-card">
-            <ImageCompareSlider
-              beforeImage="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80"
-              afterImage="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80"
-              beforeLabel="Empty Room"
-              afterLabel="AI Staged"
-              className="rounded-xl overflow-hidden"
-            />
+        <div className="mt-20 mx-auto max-w-5xl animate-scale-up delay-6">
+          <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+            {/* Accent glow behind */}
+            <div className="absolute -inset-1 bg-[var(--accent)]/10 blur-2xl rounded-3xl" />
+
+            <div className="relative bg-[var(--bg-elevated)] p-2 rounded-2xl">
+              <ImageCompareSlider
+                beforeImage="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80"
+                afterImage="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80"
+                beforeLabel="Before"
+                afterLabel="After"
+                className="rounded-xl overflow-hidden aspect-[16/10]"
+              />
+            </div>
           </div>
 
           {/* Caption */}
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <p className="mt-4 text-center text-sm text-[var(--text-muted)] animate-fade-in delay-8">
             Drag the slider to see the transformation
           </p>
         </div>
       </div>
 
-      {/* Video Modal - simplified placeholder */}
+      {/* Video Modal */}
       {isVideoOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 animate-fade-in"
           onClick={() => setIsVideoOpen(false)}
         >
-          <div className="relative max-w-4xl w-full aspect-video bg-card rounded-xl flex items-center justify-center">
+          <div
+            className="relative max-w-4xl w-full aspect-video bg-[var(--bg-elevated)] rounded-2xl flex items-center justify-center border border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="text-center">
-              <Play className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-muted-foreground">Demo video coming soon</p>
+              <Play className="h-16 w-16 mx-auto mb-4 text-[var(--text-muted)]" />
+              <p className="text-[var(--text-muted)]">Demo video coming soon</p>
             </div>
             <button
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+              className="absolute top-4 right-4 p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/5 transition-colors"
               onClick={() => setIsVideoOpen(false)}
             >
-              Close
+              <X className="h-5 w-5" />
             </button>
           </div>
         </div>

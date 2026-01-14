@@ -2,12 +2,12 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Check, Sparkles } from 'lucide-react'
+import { Check } from 'lucide-react'
 
 const plans = [
   {
     name: 'Free',
-    description: 'Perfect for trying out RenderAI',
+    description: 'Perfect for trying out',
     price: '$0',
     period: 'forever',
     features: [
@@ -16,13 +16,13 @@ const plans = [
       'Standard resolution',
       'Community support',
     ],
-    cta: 'Get Started Free',
+    cta: 'Get Started',
     href: '/signup',
-    popular: false,
+    featured: false,
   },
   {
     name: 'Pro',
-    description: 'For active real estate agents',
+    description: 'For active professionals',
     price: '$10',
     period: '/month',
     features: [
@@ -35,11 +35,11 @@ const plans = [
     ],
     cta: 'Start Pro Trial',
     href: '/signup?plan=pro',
-    popular: true,
+    featured: true,
   },
   {
     name: 'Business',
-    description: 'For teams and brokerages',
+    description: 'For teams and agencies',
     price: '$29',
     period: '/month',
     features: [
@@ -52,67 +52,75 @@ const plans = [
     ],
     cta: 'Contact Sales',
     href: '/contact',
-    popular: false,
+    featured: false,
   },
 ]
 
 export function Pricing() {
   return (
-    <section id="pricing" className="py-20 md:py-28 bg-muted/30">
+    <section id="pricing" className="py-24 md:py-32 bg-[var(--bg-secondary)]">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl text-center mb-16">
-          <div className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-sm mb-4">
-            <span className="text-gradient-brand font-medium">Pricing</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-            Simple,{' '}
-            <span className="text-gradient-brand">Transparent Pricing</span>
+        {/* Header */}
+        <div className="max-w-2xl mx-auto text-center mb-20">
+          <span className="badge-studio animate-fade-up">Pricing</span>
+          <h2 className="mt-6 font-display text-4xl md:text-5xl tracking-tight animate-fade-up delay-1">
+            <span className="text-[var(--surface-light)]">Simple, </span>
+            <span className="italic text-[var(--accent)]">transparent.</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="mt-4 text-[var(--text-secondary)] text-lg animate-fade-up delay-2">
             Start free, upgrade when you need more. No hidden fees.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
-          {plans.map((plan) => (
+        {/* Pricing cards */}
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {plans.map((plan, index) => (
             <div
               key={plan.name}
-              className={`relative bg-card rounded-2xl border p-8 flex flex-col ${
-                plan.popular
-                  ? 'border-2 border-primary shadow-lg shadow-primary/10'
-                  : ''
+              className={`relative rounded-2xl p-8 animate-fade-up ${
+                plan.featured
+                  ? 'bg-[var(--bg-elevated)] border-2 border-[var(--accent)]/30 shadow-[0_0_60px_var(--accent-glow)]'
+                  : 'bg-[var(--bg-elevated)] border border-white/5'
               }`}
+              style={{ animationDelay: `${(index + 3) * 100}ms` }}
             >
-              {/* Popular badge */}
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-brand px-4 py-1.5 text-sm text-white font-medium shadow-lg">
-                    <Sparkles className="h-4 w-4" />
+              {/* Featured badge */}
+              {plan.featured && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="px-4 py-1 text-xs font-medium tracking-wide uppercase bg-[var(--accent)] text-[var(--bg-primary)] rounded-full">
                     Most Popular
-                  </div>
+                  </span>
                 </div>
               )}
 
               {/* Plan header */}
               <div className="mb-6">
-                <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
-                <p className="text-sm text-muted-foreground">{plan.description}</p>
+                <h3 className="font-display text-2xl text-[var(--surface-light)]">
+                  {plan.name}
+                </h3>
+                <p className="text-sm text-[var(--text-muted)] mt-1">
+                  {plan.description}
+                </p>
               </div>
 
               {/* Price */}
-              <div className="mb-6">
-                <span className="text-4xl font-bold">{plan.price}</span>
-                <span className="text-muted-foreground">{plan.period}</span>
+              <div className="mb-8">
+                <span className="font-display text-5xl text-[var(--surface-light)]">
+                  {plan.price}
+                </span>
+                <span className="text-[var(--text-muted)] ml-1">
+                  {plan.period}
+                </span>
               </div>
 
               {/* Features */}
-              <ul className="space-y-3 mb-8 flex-grow">
+              <ul className="space-y-3 mb-8">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
-                    <div className={`mt-0.5 rounded-full p-0.5 ${plan.popular ? 'bg-gradient-brand' : 'bg-teal-500'}`}>
-                      <Check className="h-3.5 w-3.5 text-white" />
+                    <div className={`mt-0.5 rounded-full p-0.5 ${plan.featured ? 'bg-[var(--accent)]' : 'bg-[var(--success)]'}`}>
+                      <Check className="h-3 w-3 text-[var(--bg-primary)]" />
                     </div>
-                    <span className="text-sm">{feature}</span>
+                    <span className="text-sm text-[var(--text-secondary)]">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -120,11 +128,10 @@ export function Pricing() {
               {/* CTA */}
               <Button
                 asChild
-                size="lg"
-                className={`w-full ${
-                  plan.popular
-                    ? 'btn-gradient'
-                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                className={`w-full h-11 rounded-lg ${
+                  plan.featured
+                    ? 'btn-accent'
+                    : 'bg-white/5 text-[var(--text-primary)] hover:bg-white/10 border border-white/10'
                 }`}
               >
                 <Link href={plan.href}>{plan.cta}</Link>
@@ -133,8 +140,8 @@ export function Pricing() {
           ))}
         </div>
 
-        {/* Money back guarantee */}
-        <p className="text-center text-sm text-muted-foreground mt-8">
+        {/* Guarantee */}
+        <p className="text-center text-sm text-[var(--text-muted)] mt-10 animate-fade-up delay-6">
           14-day money-back guarantee. Cancel anytime.
         </p>
       </div>

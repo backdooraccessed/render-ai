@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Twitter, Linkedin, Instagram, Mail, Sparkles } from 'lucide-react'
+import { Twitter, Linkedin, Instagram, Mail } from 'lucide-react'
 
 const footerLinks = {
   product: [
@@ -32,28 +32,34 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-muted/30 border-t">
-      <div className="container mx-auto px-4 py-12 md:py-16">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
+    <footer className="bg-[var(--bg-primary)] border-t border-white/5">
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2 mb-4">
-              <div className="h-8 w-8 rounded-lg bg-gradient-brand flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white" />
+            <Link href="/" className="inline-flex items-center gap-3 mb-6">
+              {/* Logo mark */}
+              <div className="relative h-8 w-8">
+                <div className="absolute inset-0 rounded-md border border-[var(--accent)]/30" />
+                <div className="absolute inset-1 rounded-sm border border-[var(--accent)]/50" />
+                <div className="absolute inset-2 rounded-[2px] bg-[var(--accent)]" />
               </div>
-              <span className="text-xl font-bold">RenderAI</span>
+              <span className="text-lg tracking-tight">
+                <span className="font-display">Render</span>
+                <span className="font-display italic text-[var(--accent)]">AI</span>
+              </span>
             </Link>
-            <p className="text-muted-foreground mb-6 max-w-xs">
-              Transform empty rooms into beautifully staged renders with AI. Built for real estate professionals.
+            <p className="text-[var(--text-secondary)] mb-6 max-w-xs leading-relaxed">
+              Transform empty spaces into photorealistic renders with AI. Built for real estate professionals.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="h-10 w-10 rounded-full border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
+                  className="h-10 w-10 rounded-lg border border-white/10 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)]/30 transition-colors"
                   aria-label={social.label}
                 >
                   <social.icon className="h-4 w-4" />
@@ -64,13 +70,15 @@ export function Footer() {
 
           {/* Product links */}
           <div>
-            <h3 className="font-semibold mb-4">Product</h3>
+            <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)] mb-4">
+              Product
+            </h3>
             <ul className="space-y-3">
               {footerLinks.product.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-[var(--text-secondary)] hover:text-[var(--surface-light)] transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -81,13 +89,15 @@ export function Footer() {
 
           {/* Company links */}
           <div>
-            <h3 className="font-semibold mb-4">Company</h3>
+            <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)] mb-4">
+              Company
+            </h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-[var(--text-secondary)] hover:text-[var(--surface-light)] transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -98,13 +108,15 @@ export function Footer() {
 
           {/* Legal links */}
           <div>
-            <h3 className="font-semibold mb-4">Legal</h3>
+            <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)] mb-4">
+              Legal
+            </h3>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-[var(--text-secondary)] hover:text-[var(--surface-light)] transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -115,14 +127,12 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-[var(--text-muted)]">
             {new Date().getFullYear()} RenderAI. All rights reserved.
           </p>
-          <p className="text-sm text-muted-foreground">
-            Built with{' '}
-            <span className="text-gradient-brand font-medium">AI</span>
-            {' '}for real estate professionals.
+          <p className="text-sm text-[var(--text-muted)]">
+            Crafted for real estate professionals.
           </p>
         </div>
       </div>
