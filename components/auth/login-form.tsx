@@ -6,11 +6,10 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { GoogleButton } from '@/components/auth/google-button'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Sparkles } from 'lucide-react'
+import { Loader2, Sparkles, ArrowRight } from 'lucide-react'
 
 export function LoginForm() {
   const router = useRouter()
@@ -42,15 +41,25 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
-        <div className="flex justify-center mb-2">
-          <Sparkles className="h-8 w-8 text-primary" />
-        </div>
-        <CardTitle className="text-2xl">Welcome back</CardTitle>
-        <CardDescription>Sign in to your RenderAI account</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="w-full max-w-md">
+      {/* Mobile logo */}
+      <div className="lg:hidden flex justify-center mb-8">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="h-10 w-10 rounded-xl bg-gradient-brand flex items-center justify-center">
+            <Sparkles className="h-5 w-5 text-white" />
+          </div>
+          <span className="text-xl font-bold">
+            Render<span className="text-gradient-brand">AI</span>
+          </span>
+        </Link>
+      </div>
+
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-bold mb-2">Welcome back</h1>
+        <p className="text-muted-foreground">Sign in to your RenderAI account</p>
+      </div>
+
+      <div className="space-y-6">
         <GoogleButton />
 
         <div className="relative">
@@ -75,10 +84,19 @@ export function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
+              className="h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Password</Label>
+              <Link
+                href="/forgot-password"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                Forgot password?
+              </Link>
+            </div>
             <Input
               id="password"
               type="password"
@@ -87,6 +105,7 @@ export function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={isLoading}
+              className="h-11"
             />
           </div>
 
@@ -96,20 +115,29 @@ export function LoginForm() {
             </Alert>
           )}
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In
+          <Button
+            type="submit"
+            className="w-full h-11 btn-gradient gap-2"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                Sign In
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
           </Button>
         </form>
-      </CardContent>
-      <CardFooter className="flex justify-center">
-        <p className="text-sm text-muted-foreground">
+
+        <p className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-primary hover:underline">
-            Sign up
+          <Link href="/signup" className="text-gradient-brand font-medium hover:underline">
+            Sign up free
           </Link>
         </p>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }

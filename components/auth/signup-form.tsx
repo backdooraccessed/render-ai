@@ -6,11 +6,10 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { GoogleButton } from '@/components/auth/google-button'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Sparkles } from 'lucide-react'
+import { Loader2, Sparkles, ArrowRight } from 'lucide-react'
 
 export function SignupForm() {
   const router = useRouter()
@@ -48,15 +47,25 @@ export function SignupForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
-        <div className="flex justify-center mb-2">
-          <Sparkles className="h-8 w-8 text-primary" />
-        </div>
-        <CardTitle className="text-2xl">Create an account</CardTitle>
-        <CardDescription>Get started with RenderAI for free</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="w-full max-w-md">
+      {/* Mobile logo */}
+      <div className="lg:hidden flex justify-center mb-8">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="h-10 w-10 rounded-xl bg-gradient-brand flex items-center justify-center">
+            <Sparkles className="h-5 w-5 text-white" />
+          </div>
+          <span className="text-xl font-bold">
+            Render<span className="text-gradient-brand">AI</span>
+          </span>
+        </Link>
+      </div>
+
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-bold mb-2">Create an account</h1>
+        <p className="text-muted-foreground">Get started with RenderAI for free</p>
+      </div>
+
+      <div className="space-y-6">
         <GoogleButton />
 
         <div className="relative">
@@ -80,6 +89,7 @@ export function SignupForm() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               disabled={isLoading}
+              className="h-11"
             />
           </div>
           <div className="space-y-2">
@@ -92,6 +102,7 @@ export function SignupForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
+              className="h-11"
             />
           </div>
           <div className="space-y-2">
@@ -105,6 +116,7 @@ export function SignupForm() {
               required
               minLength={6}
               disabled={isLoading}
+              className="h-11"
             />
             <p className="text-xs text-muted-foreground">
               At least 6 characters
@@ -117,24 +129,40 @@ export function SignupForm() {
             </Alert>
           )}
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Create Account
+          <Button
+            type="submit"
+            className="w-full h-11 btn-gradient gap-2"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                Create Account
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
           </Button>
         </form>
 
         <p className="text-xs text-center text-muted-foreground">
-          By signing up, you agree to our Terms of Service and Privacy Policy
+          By signing up, you agree to our{' '}
+          <Link href="/terms" className="underline hover:text-foreground">
+            Terms of Service
+          </Link>{' '}
+          and{' '}
+          <Link href="/privacy" className="underline hover:text-foreground">
+            Privacy Policy
+          </Link>
         </p>
-      </CardContent>
-      <CardFooter className="flex justify-center">
-        <p className="text-sm text-muted-foreground">
+
+        <p className="text-center text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link href="/login" className="text-primary hover:underline">
+          <Link href="/login" className="text-gradient-brand font-medium hover:underline">
             Sign in
           </Link>
         </p>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }
