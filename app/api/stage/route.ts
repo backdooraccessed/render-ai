@@ -49,15 +49,18 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Use P-Image-Edit for fast staging
+    // Use adirik/interior-design for structure-preserving staging
+    // This model uses ControlNet (segmentation + MLSD) to preserve room layout
     const output = await replicate.run(
-      'prunaai/p-image-edit',
+      'adirik/interior-design',
       {
         input: {
-          images: [imageUrl],
+          image: imageUrl,
           prompt: prompt,
-          turbo: true,
-          aspect_ratio: 'match_input_image',
+          negative_prompt: 'lowres, watermark, banner, logo, distorted, blurry, bad anatomy, wrong proportions, floating furniture, clipping, unrealistic',
+          num_inference_steps: 50,
+          guidance_scale: 15,
+          prompt_strength: 0.8, // 0.8 = preserve 20% of original structure
         },
       }
     )

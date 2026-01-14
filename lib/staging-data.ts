@@ -137,17 +137,30 @@ export function buildStagingPrompt(
   const roomName = ROOM_TYPES.find(r => r.id === roomType)?.name || 'room'
   const furnitureList = selectedFurniture.map(f => f.promptKeywords).join(', ')
 
-  let prompt = `Transform this empty ${roomName} into a beautifully staged ${roomName}. ${style.promptPrefix}`
+  // Structure-preserving prompt for ControlNet-based staging
+  let prompt = `A beautifully staged ${roomName}, ${style.promptPrefix}`
 
   if (furnitureList) {
-    prompt += `. Add ${furnitureList}`
+    prompt += `, furnished with ${furnitureList}`
+  } else {
+    // Default furniture based on room type
+    const defaultFurniture: Record<string, string> = {
+      living: 'sofa, coffee table, armchair, area rug, floor lamp',
+      bedroom: 'bed with headboard, nightstands, dresser, area rug',
+      dining: 'dining table with chairs, sideboard, pendant light',
+      office: 'desk, ergonomic chair, bookshelf, desk lamp',
+      kitchen: 'bar stools, pendant lights, decorative items',
+      bathroom: 'towels, plants, decorative accessories',
+    }
+    prompt += `, furnished with ${defaultFurniture[roomType] || 'furniture'}`
   }
 
   if (customPrompt) {
     prompt += `. ${customPrompt}`
   }
 
-  prompt += '. Professional interior photography, high quality, photorealistic, well-lit, magazine quality'
+  // Emphasize photorealism and quality
+  prompt += '. Interior design photography, photorealistic, natural lighting, high resolution, architectural digest style'
 
   return prompt
 }
