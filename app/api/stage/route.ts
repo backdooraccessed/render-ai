@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     // Use adirik/interior-design for structure-preserving staging
     // This model uses ControlNet (segmentation + MLSD) to preserve room layout
     const output = await replicate.run(
-      'adirik/interior-design',
+      'adirik/interior-design:76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38',
       {
         input: {
           image: imageUrl,
@@ -95,12 +95,12 @@ export async function POST(request: NextRequest) {
       const response = await fetch(outputUrl)
       const blob = await response.blob()
       const buffer = Buffer.from(await blob.arrayBuffer())
-      const fileName = `staged-${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`
+      const fileName = `staged-${Date.now()}-${Math.random().toString(36).substring(7)}.png`
 
       const { error: uploadError } = await supabase.storage
         .from('renders')
         .upload(fileName, buffer, {
-          contentType: 'image/jpeg',
+          contentType: 'image/png',
           upsert: false,
         })
 
