@@ -1,57 +1,72 @@
-import { Upload, MessageSquare, Sparkles } from 'lucide-react'
+'use client'
+
+import { Upload, Palette, Download, ArrowRight } from 'lucide-react'
 
 const steps = [
   {
     icon: Upload,
-    step: '1',
+    step: '01',
     title: 'Upload Your Photo',
-    description: 'Drag and drop any room photo, sketch, or 3D screenshot.',
+    description: 'Drag and drop any room photo, sketch, or 3D screenshot. We support JPG, PNG, and WebP formats.',
+    color: 'from-pink-500 to-rose-500',
   },
   {
-    icon: MessageSquare,
-    step: '2',
-    title: 'Describe Your Vision',
-    description: 'Tell us what you want in plain English. "Add modern furniture" or "make it brighter".',
+    icon: Palette,
+    step: '02',
+    title: 'Choose Your Style',
+    description: 'Pick from preset styles like Modern, Scandinavian, or Industrial—or describe your vision in your own words.',
+    color: 'from-violet-500 to-purple-500',
   },
   {
-    icon: Sparkles,
-    step: '3',
-    title: 'Get Your Render',
-    description: 'Our AI transforms your image in seconds. Download and share.',
+    icon: Download,
+    step: '03',
+    title: 'Download & Share',
+    description: 'Get your photorealistic render in 30 seconds. Download in high resolution, ready for listings or presentations.',
+    color: 'from-teal-500 to-emerald-500',
   },
 ]
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20">
+    <section id="how-it-works" className="py-20 md:py-28 bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight mb-4">
-            How It Works
+        <div className="mx-auto max-w-2xl text-center mb-16">
+          <div className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-sm mb-4">
+            <span className="text-gradient-brand font-medium">How It Works</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+            Transform Any Space in{' '}
+            <span className="text-gradient-brand">3 Simple Steps</span>
           </h2>
-          <p className="text-muted-foreground">
-            Three simple steps to transform any space.
+          <p className="text-lg text-muted-foreground">
+            No design skills needed. Just upload, describe, and download.
           </p>
         </div>
 
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-5xl">
           <div className="grid gap-8 md:grid-cols-3">
             {steps.map((step, index) => (
-              <div key={step.title} className="relative text-center">
-                {/* Connector line */}
+              <div key={step.title} className="relative">
+                {/* Connector arrow */}
                 {index < steps.length - 1 && (
-                  <div className="absolute top-8 left-[60%] hidden h-0.5 w-[80%] bg-border md:block" />
+                  <div className="absolute top-12 -right-4 hidden md:flex items-center justify-center z-10">
+                    <ArrowRight className="h-6 w-6 text-muted-foreground/30" />
+                  </div>
                 )}
 
-                <div className="relative mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary bg-background">
-                  <step.icon className="h-7 w-7 text-primary" />
-                  <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                <div className="relative bg-card rounded-2xl border p-8 h-full card-hover">
+                  {/* Step number badge */}
+                  <div className={`absolute -top-4 left-8 inline-flex h-8 px-3 items-center justify-center rounded-full bg-gradient-to-r ${step.color} text-white text-sm font-bold shadow-lg`}>
                     {step.step}
-                  </span>
-                </div>
+                  </div>
 
-                <h3 className="mb-2 font-semibold">{step.title}</h3>
-                <p className="text-sm text-muted-foreground">{step.description}</p>
+                  <div className={`mt-4 mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${step.color}`}>
+                    <step.icon className="h-7 w-7 text-white" />
+                  </div>
+
+                  <h3 className="mb-3 text-xl font-semibold">{step.title}</h3>
+                  <p className="text-muted-foreground">{step.description}</p>
+                </div>
               </div>
             ))}
           </div>
