@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { ImageUpload } from '@/components/image-upload'
 import { PromptInput } from '@/components/prompt-input'
 import { StylePresets } from '@/components/style-presets'
@@ -12,6 +13,7 @@ import { SeedControl } from '@/components/seed-control'
 import { ReferenceImageUpload } from '@/components/reference-image-upload'
 import { GenerateButton } from '@/components/generate-button'
 import { GenerationResult } from '@/components/generation-result'
+import { ProjectSelector } from '@/components/project-selector'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { OnboardingTour } from '@/components/onboarding-tour'
@@ -21,7 +23,8 @@ import { fileToBase64, getSessionId } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { Info } from 'lucide-react'
 
-export default function GeneratePage() {
+function GeneratePageContent() {
+  const searchParams = useSearchParams()
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [referenceFile, setReferenceFile] = useState<File | null>(null)
@@ -36,9 +39,18 @@ export default function GeneratePage() {
   const [generation, setGeneration] = useState<Generation | null>(null)
   const [isMock, setIsMock] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
 
   // First generation celebration
   const { showCelebration, markFirstGeneration, closeCelebration } = useFirstGeneration()
+
+  // Get project ID from URL params
+  useEffect(() => {
+    const projectFromUrl = searchParams.get('project')
+    if (projectFromUrl) {
+      setSelectedProjectId(projectFromUrl)
+    }
+  }, [searchParams])
 
   const handleImageSelect = useCallback((file: File, preview: string) => {
     setSelectedFile(file)
@@ -95,6 +107,7 @@ export default function GeneratePage() {
           negativePrompt: negativePrompt.trim() || undefined,
           seed,
           sessionId,
+          projectId: selectedProjectId,
         }),
       })
 
@@ -123,7 +136,7 @@ export default function GeneratePage() {
     } finally {
       setIsLoading(false)
     }
-  }, [selectedFile, prompt, strength, numOutputs])
+  }, [selectedFile, prompt, strength, numOutputs, negativePrompt, seed, referenceFile, selectedProjectId, markFirstGeneration])
 
   const handleRegenerate = useCallback(() => {
     handleGenerate()
@@ -148,6 +161,15 @@ export default function GeneratePage() {
           <p className="text-muted-foreground">
             Transform your interior photos with natural language
           </p>
+        </div>
+
+        {/* Project Selector */}
+        <div className="flex justify-center mb-6">
+          <ProjectSelector
+            selectedProjectId={selectedProjectId}
+            onProjectSelect={setSelectedProjectId}
+            disabled={isLoading}
+          />
         </div>
 
         {/* Main Content */}
@@ -282,5 +304,13 @@ export default function GeneratePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function GeneratePage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <GeneratePageContent />
+    </Suspense>
   )
 }

@@ -111,6 +111,15 @@ export function Header() {
                 History
               </Link>
               <Link
+                href="/app/projects"
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  pathname?.startsWith('/app/projects') ? 'text-primary' : 'text-muted-foreground'
+                )}
+              >
+                Projects
+              </Link>
+              <Link
                 href="/gallery"
                 className={cn(
                   "text-sm font-medium transition-colors hover:text-primary",

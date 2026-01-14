@@ -3,6 +3,8 @@ export type GenerationStatus = 'pending' | 'processing' | 'completed' | 'failed'
 export interface Generation {
   id: string
   session_id: string | null
+  user_id?: string
+  project_id?: string | null
   input_image_url: string
   output_image_url: string | null
   output_image_urls?: string[] // Multiple outputs support
@@ -24,6 +26,26 @@ export interface Generation {
   is_featured?: boolean
   view_count?: number
   share_token?: string
+  // Sprint 5: Projects
+  project?: Project
+}
+
+export interface Project {
+  id: string
+  user_id: string
+  name: string
+  description?: string | null
+  client_name?: string | null
+  address?: string | null
+  default_style?: string | null
+  default_room_type?: string | null
+  cover_image_url?: string | null
+  is_archived: boolean
+  created_at: string
+  updated_at: string
+  // Computed fields
+  generation_count?: number
+  latest_generation?: string | null
 }
 
 export interface Style {

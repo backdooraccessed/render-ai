@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
       numOutputs = 1,
       negativePrompt,
       seed,
+      projectId,
     } = body
 
     // Validate required fields
@@ -114,6 +115,7 @@ export async function POST(request: NextRequest) {
       .insert({
         user_id: user.id,
         session_id: sessionId || null,
+        project_id: projectId || null,
         input_image_url: inputImageUrl,
         style: 'custom', // Mark as custom prompt
         room_type: 'custom',
