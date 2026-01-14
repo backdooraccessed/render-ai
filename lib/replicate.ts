@@ -105,11 +105,19 @@ export async function generateInteriorRender(params: GenerationParams): Promise<
         }
       )
 
-      // Output is a single URL string
-      if (typeof output === 'string') {
+      // Output can be a FileOutput object, string, or array
+      if (Array.isArray(output) && output.length > 0) {
+        const firstOutput = output[0]
+        if (firstOutput && typeof firstOutput === 'object' && 'toString' in firstOutput) {
+          outputUrls.push(firstOutput.toString())
+        } else {
+          outputUrls.push(String(firstOutput))
+        }
+      } else if (typeof output === 'string') {
         outputUrls.push(output)
-      } else if (Array.isArray(output) && output.length > 0) {
-        outputUrls.push(output[0] as string)
+      } else if (output && typeof output === 'object' && 'toString' in output) {
+        // FileOutput object - call toString() to get URL
+        outputUrls.push(output.toString())
       }
     }
 
