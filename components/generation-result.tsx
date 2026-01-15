@@ -15,6 +15,7 @@ import { Download, RefreshCw, AlertCircle, Share2, Check, Eye, EyeOff, ChevronDo
 import { SocialExportButton } from '@/components/social-export-button'
 import { UpscaleButton } from '@/components/upscale-button'
 import { GenerationProgress } from '@/components/generation-progress'
+import { ShopThisLook } from '@/components/shop'
 import { cn } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { toast } from 'sonner'
@@ -472,6 +473,17 @@ export function GenerationResult({
           </Button>
         )}
       </div>
+
+      {/* Shop This Look - Shoppable Staging Feature */}
+      {generation?.style && generation?.room_type && generation.status === 'completed' && (
+        <div className="mt-4">
+          <ShopThisLook
+            style={generation.style}
+            roomType={generation.room_type}
+            generationId={generation.id}
+          />
+        </div>
+      )}
     </Card>
   )
 }

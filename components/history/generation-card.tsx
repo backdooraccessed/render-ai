@@ -3,10 +3,11 @@
 import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Download, Trash2, Maximize2, Heart } from 'lucide-react'
+import { Download, Trash2, Maximize2, Heart, X, ShoppingBag } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Generation } from '@/types'
 import { toast } from 'sonner'
+import { ShopThisLook } from '@/components/shop'
 
 interface GenerationCardProps {
   generation: Generation
@@ -155,27 +156,68 @@ export function GenerationCard({ generation, onDelete, onFavoriteToggle }: Gener
       {/* Full size modal */}
       {showFull && generation.output_image_url && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 overflow-y-auto"
           onClick={() => setShowFull(false)}
         >
-          <div className="relative max-w-4xl max-h-[90vh]">
-            <img
-              src={generation.output_image_url}
-              alt="Generated render"
-              className="max-w-full max-h-[90vh] object-contain rounded-lg"
-            />
+          <div
+            className="relative w-full max-w-5xl my-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
             <Button
-              size="sm"
-              variant="secondary"
-              className="absolute top-2 right-2"
-              onClick={(e) => {
-                e.stopPropagation()
-                handleDownload()
-              }}
+              size="icon"
+              variant="ghost"
+              className="absolute -top-12 right-0 text-white hover:bg-white/10"
+              onClick={() => setShowFull(false)}
             >
-              <Download className="h-4 w-4 mr-2" />
-              Download
+              <X className="h-5 w-5" />
             </Button>
+
+            {/* Image */}
+            <div className="relative">
+              <img
+                src={generation.output_image_url}
+                alt="Generated render"
+                className="w-full object-contain rounded-lg max-h-[60vh]"
+              />
+              <Button
+                size="sm"
+                variant="secondary"
+                className="absolute top-2 right-2"
+                onClick={handleDownload}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download
+              </Button>
+
+              {/* Style/Room info badge */}
+              {(generation.style || generation.room_type) && (
+                <div className="absolute bottom-2 left-2 flex gap-2">
+                  {generation.style && (
+                    <span className="px-2 py-1 bg-black/50 backdrop-blur-sm text-white text-xs rounded capitalize">
+                      {generation.style}
+                    </span>
+                  )}
+                  {generation.room_type && (
+                    <span className="px-2 py-1 bg-black/50 backdrop-blur-sm text-white text-xs rounded capitalize">
+                      {generation.room_type.replace('-', ' ')}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Shop This Look */}
+            {generation.style && generation.room_type && (
+              <div className="mt-4">
+                <ShopThisLook
+                  style={generation.style}
+                  roomType={generation.room_type}
+                  generationId={generation.id}
+                  defaultExpanded={true}
+                />
+              </div>
+            )}
           </div>
         </div>
       )}
